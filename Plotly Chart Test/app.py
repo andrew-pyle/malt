@@ -16,17 +16,45 @@ df.index += 1
 # Function Declarations
 def AccountHistogram(data_filename):
     #df = pd.read_json(data_filename)
-    accounts = [
-        go.Histogram(x=df["IP Address"])
+    trace = [
+        go.Histogram(x=df["IP Address"]),
     ]
-    return plotly.offline.plot(accounts, output_type='div', include_plotlyjs=False)
+    layout = go.Layout(
+        margin = dict(
+            l=10,
+            r=0,
+            t=0,
+        ),
+    )
+    accounts = go.Figure(data=trace, layout=layout)
+
+    return plotly.offline.plot(
+        accounts,
+        output_type='div',
+        include_plotlyjs=False,
+        show_link=False,
+        )
 
 def LocationHistogram(data_filename):
     #df = pd.read_json(data_filename)
-    locations = [
+    trace = [
         go.Histogram(x=df["City"])
     ]
-    return plotly.offline.plot(locations, output_type='div', include_plotlyjs=False)
+    layout = go.Layout(
+        margin = dict(
+            l=10,
+            r=0,
+            t=0,
+        ),
+    )
+    locations = go.Figure(data=trace, layout=layout)
+
+    return plotly.offline.plot(
+        locations,
+        output_type='div',
+        include_plotlyjs=False,
+        show_link=False,
+        )
 
 
 @app.route("/")
