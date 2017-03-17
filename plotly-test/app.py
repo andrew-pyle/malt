@@ -3,6 +3,8 @@ from flask import render_template
 
 import plotly.offline
 import plotly.graph_objs as go
+from plotly.tools import FigureFactory as FF
+
 import pandas as pd
 
 app = Flask(__name__)
@@ -74,14 +76,31 @@ def LocationHistogram():
         show_link=False,
         )
 
+def DataTable():
+    table = FF.create_table(
+        df,
+        colorscale = [[0, '#3D4A57'],
+                      [.5, '#d9d9d9'],
+                      [1, '#ffffff']],
+        )
+
+    return plotly.offline.plot(
+        table,
+        filename='file.html',
+        output_type='div',
+        include_plotlyjs=False,
+        show_link=False,
+        )
+
 ## URL Routing
 @app.route("/")
 def index():
     return render_template(
         "index.html",
-        account_histogram=AccountHistogram(),
-        location_histogram=LocationHistogram(),
-        data_table=df.to_html(),
+        account_histogram = AccountHistogram(),
+        location_histogram = LocationHistogram(),
+        #data_table = df.to_html(),
+        data_table = DataTable(),
         )
 
 if __name__ == '__main__':
