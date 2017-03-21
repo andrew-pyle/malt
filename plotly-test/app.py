@@ -21,9 +21,9 @@ def AccountHistogram():
     ipFrame = pd.DataFrame({'ipAddress':ipSeries.index, 'login count':ipSeries.values})
     trace = [
         go.Bar(
-            x=ipFrame["ipAddress"],
-            y=ipFrame["login count"],
-            width = 1,
+            x = ipFrame["ipAddress"],
+            y = ipFrame["login count"],
+            #width = 0.9,
             marker = dict(
                 color='rgb(158,202,225)',
                 line=dict(
@@ -39,11 +39,23 @@ def AccountHistogram():
     ]
     layout = go.Layout(
         margin = dict(
-            l=10,
+            l=35,
             r=0,
-            t=0,
-            #b=100,
-        ),
+            t=1,
+            b=30,
+            ),
+        xaxis = dict(
+            title = "Account Name",
+            showticklabels = False,
+            tickmode = 'auto',
+            nticks = 10,
+            tickfont = dict(
+                size=10,
+                ),
+            ),
+        yaxis = dict(
+            title = "Frequency"
+            ),
     )
 
     accounts = go.Figure(data=trace, layout=layout)
