@@ -52,14 +52,12 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
           <div class="chart-stage">
             <!--<img data-src="holder.js/100%x120/white">-->
             <div id="mapid" style="height: 400px;"></div>
-            <script type='text/javascript' src='../static/assets/js/leaflet-map.js'></script>
+            <script type='text/javascript' src='../static/assets/js/leafletMapCustom.js'></script>
+          </div>
+          <div class="chart-notes">
           </div>
         </div>
-        <div class="chart-notes">
-          Map of all login alerts
-        </div>
       </div>
-    </div>
       <div class="col-sm-4">
         <div class="chart-wrapper">
           <div class="chart-title">
@@ -69,7 +67,7 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
             {{location_histogram | safe}}
           </div>
           <div class="chart-notes">
-            A distribution of all the potentially malicious login locations
+            Hover the mouse over a bar to see its location and count.
           </div>
         </div>
       </div>
@@ -79,7 +77,7 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
       <div class="col-sm-6">
         <div class="chart-wrapper">
           <div class="chart-title">
-            Cell title
+            Account Distribution
           </div>
           <div class="chart-stage">
             <div>
@@ -87,7 +85,7 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
             </div>
           </div>
           <div class="chart-notes">
-            A list of all potentially malicious records from the last three months
+            Hover the mouse over a bar to see its account name and count.
           </div>
         </div>
       </div>

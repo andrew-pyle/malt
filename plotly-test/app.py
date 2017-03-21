@@ -45,7 +45,7 @@ def AccountHistogram():
             b=30,
             ),
         xaxis = dict(
-            title = "Account Name",
+            #title = "Account Name",
             showticklabels = False,
             tickmode = 'auto',
             nticks = 10,
@@ -54,12 +54,10 @@ def AccountHistogram():
                 ),
             ),
         yaxis = dict(
-            title = "Frequency"
+            #title = "Frequency"
             ),
     )
-
     accounts = go.Figure(data=trace, layout=layout)
-
     return plotly.offline.plot(
         accounts,
         output_type='div',
@@ -70,13 +68,26 @@ def AccountHistogram():
 def LocationHistogram():
     #df = pd.read_json(data_filename)
     trace = [
-        go.Histogram(x=df["City"])
+        go.Histogram(x=df["City"],
+        marker = dict(
+            color='rgb(158,202,225)',
+            line=dict(
+                color='rgb(8,48,107)',
+                width=1.5,
+                ),
+            ),
+        opacity=0.6,
+        ),
     ]
     layout = go.Layout(
         margin = dict(
             l=10,
             r=0,
             t=0,
+        ),
+        xaxis = dict(
+            showticklabels = False,
+
         ),
     )
     locations = go.Figure(data=trace, layout=layout)
