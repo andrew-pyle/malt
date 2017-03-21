@@ -3,7 +3,7 @@ from flask import render_template
 
 import plotly.offline
 import plotly.graph_objs as go
-from plotly.tools import FigureFactory as FF
+import plotly.figure_factory as FF
 
 import pandas as pd
 

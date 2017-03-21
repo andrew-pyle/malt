@@ -7,13 +7,12 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
 <head>
   <title>MALT: Dashboard</title>
   <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
-  <link rel="stylesheet" href="../static/assets/css/custom.css" />
   <link rel="stylesheet" type="text/css" href="../static/assets/lib/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="../static/assets/css/keen-dashboards.css" />
   <link rel="stylesheet" type="text/css" href="../static/assets/css/keen-static.css" />
   <link rel="stylesheet" type="text/css" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
   <script type="text/javascript" src="../static/assets/js/plotly.min.js"></script>
-  <script type='text/javascript' src='http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js'></script>
+  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
 </head>
 <body class="application">
 
@@ -52,7 +51,8 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
           </div>
           <div class="chart-stage">
             <!--<img data-src="holder.js/100%x120/white">-->
-            <div id="mapid"><script type="text/javascript" src="../static/assets/js/leaflet-map.js"></script></div>
+            <div id="mapid" style="height: 400px;"></div>
+            <script type='text/javascript' src='../static/assets/js/leaflet-map.js'></script>
           </div>
         </div>
         <div class="chart-notes">
