@@ -100,16 +100,17 @@ def LocationHistogram():
         )
 
 def DataTable():
+    dfTable = df['Account Name','']
     table = FF.create_table(
         df,
         colorscale = [[0, '#3D4A57'],
                       [.5, '#d9d9d9'],
                       [1, '#ffffff']],
         )
-
+    #table.layout.width = 1000 #width in px
     return plotly.offline.plot(
         table,
-        filename='file.html',
+        #filename='file.html',
         output_type='div',
         include_plotlyjs=False,
         show_link=False,
