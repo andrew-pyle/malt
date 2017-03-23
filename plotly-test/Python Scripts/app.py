@@ -99,14 +99,7 @@ def LocationDistribution():
         )
 
 def TimeOfDayDistribution():
-    # Declare variables for layout below. I couldn't figure out how to create them inline.
-    hours_list = list(range(0,25))
-    hours_format_list = []
-    for x in range(0,25):
-        hours_format_list.append('{}:00'.format(x))
-
-
-    timeSeries = df["Hour"].value_counts()
+    timeSeries = df["Time"].value_counts()
     timeFrame = pd.DataFrame({'Time':timeSeries.index, 'Count':timeSeries.values})
     trace = [
         go.Bar(
@@ -131,14 +124,13 @@ def TimeOfDayDistribution():
             l=35,
             r=0,
             t=1,
-            b=50,
+            b=30,
             ),
         xaxis = dict(
-            autotick = False,
-            showticklabels = True,
-            tickmode = 'array',
-            tickvals = list(range(0,25)), ## Should be: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],
-            ticktext = hours_format_list, ## Should be: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00'],
+            #title = "Account Name",
+            showticklabels = False,
+            tickmode = 'auto',
+            nticks = 10,
             tickfont = dict(
                 size=10,
                 ),
@@ -156,17 +148,16 @@ def TimeOfDayDistribution():
         )
 
 def DataTable():
-    dfTable = df['Account Name','']
     table = FF.create_table(
         df,
         colorscale = [[0, '#3D4A57'],
                       [.5, '#d9d9d9'],
                       [1, '#ffffff']],
         )
-    #table.layout.width = 1000 #width in px
+
     return plotly.offline.plot(
         table,
-        #filename='file.html',
+        filename='file.html',
         output_type='div',
         include_plotlyjs=False,
         show_link=False,

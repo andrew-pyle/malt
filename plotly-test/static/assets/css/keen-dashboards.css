@@ -84,7 +84,7 @@ body.application .return-link:hover,
 }
 
 .chart-wrapper .chart-stage {
-  overflow: hidden;
+  /*overflow: hidden;*/
   padding: 5px 10px;
   position: relative;
 }
