@@ -1,3 +1,35 @@
+'''
+MALT - Flask Web Application
+-----------------------------------------------
+Andrew Pyle, Zhenlin Jin, Hanzhao Chen
+UA LITTLE ROCK DEPARTMENT OF COMPUTER SCIENCE
+-----------------------------------------------
+This python applicaiton routes HTTP requests, manipulates data (Pandas Library), creates charts
+(Plotly Python API). The static CSS and JS files are under static/assets. This is requrired for
+Flask to serve them in production. The web server should serve these files in production.
+
+The data manipulation and charting functions are defined below. They expect a Pandas DataFrame with
+The data to be visualized.
+
+DataFrame columns expected (as of 23 Mar 2017):
+ - df['Account Name']
+ - df['City']
+ - df['Hour']
+ - df[['Country']
+ - df['State']
+ - df['City']
+ - df['Date']
+ - df['Time']
+ - df['IP Address']
+
+TODO:
+ - Create python function to query a database for the data and feed it to the functions (save it in
+ memory or query in each function?)
+  - Finalize layout of the webpage
+  - Create markers for the leaflet map. (Database query)
+  - Add IP Address Distribution Chart?
+'''
+
 from flask import Flask
 from flask import render_template
 
@@ -156,21 +188,22 @@ def TimeOfDayDistribution():
         )
 
 def DataTable():
-    dfTable = df['Account Name','']
-    table = FF.create_table(
-        df,
-        colorscale = [[0, '#3D4A57'],
-                      [.5, '#d9d9d9'],
-                      [1, '#ffffff']],
-        )
-    #table.layout.width = 1000 #width in px
-    return plotly.offline.plot(
-        table,
-        #filename='file.html',
-        output_type='div',
-        include_plotlyjs=False,
-        show_link=False,
-        )
+    return df[['Account Name','Country','State','City','Date','Time','IP Address',]].to_html()
+    # dfTable = df[['Account Name','Country','State','City','Date','Time','IP Address',]]
+    # table = FF.create_table(
+    #     dfTable,
+    #     colorscale = [[0, '#3D4A57'],
+    #                   [.5, '#d9d9d9'],
+    #                   [1, '#ffffff']],
+    #     )
+    # #table.layout.width = 1000 #width in px
+    # return plotly.offline.plot(
+    #     table,
+    #     #filename='file.html',
+    #     output_type='div',
+    #     include_plotlyjs=False,
+    #     show_link=False,
+    #     )
 
 ## URL Routing
 @app.route("/")
