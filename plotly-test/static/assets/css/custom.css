@@ -4,11 +4,39 @@
   overflow: hidden;
 }
 
-/*#record-table {
-  width: 100vw;
-}*/
+table.dataframe {
+  width: 100%;
+  border: none;
+  text-align:left;
+  padding: 10px;
+}
 
-.chart-stage {
+thead th{
+  border: none;
+  background-color: #3D4A57;
+  color: white;
+  padding: 5px;
+}
+
+tbody {
+  border: none;
+}
+th {
+  border: none;
+  padding: 8px;
+}
+tr:nth-child(odd) { background-color: #d9d9d9; }
+tr:nth-child(even) { background-color: #ffffff; }
+tr:hover { background-color: #ffff99; }
+
+td {
+  border: none;
+  padding: 8px;
+}
+
+
+
+/*.chart-stage {
   height: 400px;
   overflow: scroll;
-}
+}*/
