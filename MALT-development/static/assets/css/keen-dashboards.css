@@ -8,6 +8,7 @@ body.application,
   background: #f2f2f2;
   font-family: 'Gotham Rounded SSm A', 'Gotham Rounded SSm B', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   padding: 60px 20px 0;
+  
 }
 
 body.application > .container-fluid,
@@ -84,7 +85,7 @@ body.application .return-link:hover,
 }
 
 .chart-wrapper .chart-stage {
-  /*overflow: hidden;*/
+  overflow: hidden;
   padding: 5px 10px;
   position: relative;
 }

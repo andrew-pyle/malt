@@ -46,7 +46,7 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
   <div class="container-fluid">
     <!-- Map Row -->
     <div class="row">
-      <div class="col-sm-8">
+      <div class="col-sm-12">
         <div class="chart-wrapper">
           <div class="chart-title">
             Malicious Login Alert Locations
@@ -60,7 +60,10 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
           </div>
         </div>
       </div>
-      <div class="col-sm-4">
+    </div>
+    <!-- Chart Row -->
+    <div class="row">
+      <div class="col-sm-6">
         <div class="chart-wrapper">
           <div class="chart-title">
             Location Distribution
@@ -70,6 +73,19 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
           </div>
           <div class="chart-notes">
             Hover the mouse over a bar to see its location and count.
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            IP Addreses Used Today
+          </div>
+          <div class="chart-stage">
+            {{ip_address_distribution_today | safe}}
+          </div>
+          <div class="chart-notes">
+            Hover the mouse over a bar to see its IP Address and count.
           </div>
         </div>
       </div>
