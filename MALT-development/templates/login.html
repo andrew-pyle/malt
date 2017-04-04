@@ -1,4 +1,5 @@
-<!-- Adapted from Bootstrap docs example "signin" CC BY 3.0. See License at https://creativecommons.org/licenses/by/3.0/. -->
+<!-- Adapted from Bootstrap docs Sign-in Page example (2017). © Bootstrap CC BY 3.0. See License at https://creativecommons.org/licenses/by/3.0/.
+Available with Bootstrap 3.x source code download http://getbootstrap.com/getting-started/-->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,11 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!-- Need Icon file! -->
-    <link rel="icon" href="../../favicon.ico">
-
-
-    <title>Signin Template for Bootstrap</title>
+    <!-- UA Little Rock .ico file -->
+    <link rel="icon" href="../static/assets/img/favicon.ico">
+    <title>Login to MALT</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/assets/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,12 +23,12 @@
 
     <div class="container">
 
-      <form class="form-signin">
+      <form class="form-signin" method="POST">
         <h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+        <input type="username" name="username" id="inputEmail" class="form-control" placeholder="Username" required autofocus>
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
         <!-- <div class="checkbox">
           <label>
             <input type="checkbox" value="remember-me"> Remember me

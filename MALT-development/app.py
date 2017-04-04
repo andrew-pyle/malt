@@ -31,6 +31,7 @@ TODO:
 
 from flask import Flask
 from flask import render_template
+from flask import request
 
 import plotly.offline
 import plotly.graph_objs as go
@@ -279,9 +280,13 @@ def index():
         )
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET","POST"])
 def login():
-    return render_template('login.html')
+    if (request.method == 'GET'):
+        return render_template('login.html')
+    elif (request.method == 'POST'):
+        return request.form['username']
+        return request.form['password']
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
