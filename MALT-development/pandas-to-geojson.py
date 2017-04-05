@@ -26,7 +26,7 @@
 # SOFTWARE.
 # Contact GitHub API Training Shop Blog About
 
-def df_to_geojson(df, properties, lat='latitude', lon='longitude', output_type=''):
+def df_to_geojson(df, properties, lat="latitude", lon="longitude", output_type=""):
     """
     Turn a dataframe containing point data into a geojson formatted python dictionary
 
@@ -37,33 +37,38 @@ def df_to_geojson(df, properties, lat='latitude', lon='longitude', output_type='
     """
 
     # create a new python dict to contain our geojson data, using geojson format
-    geojson = {'type':'FeatureCollection', 'features':[]}
+    geojson = {"type":"FeatureCollection", "features":[]}
 
     # loop through each row in the dataframe and convert each row to geojson format
     for _, row in df.iterrows():
         # create a feature template to fill in
-        feature = {'type':'Feature',
-                   'properties':{},
-                   'geometry':{'type':'Point',
-                               'coordinates':[]}}
+        feature = {"type":"Feature",
+                   "properties":{},
+                   "geometry":{"type":"Point",
+                               "coordinates":[]}}
 
         # fill in the coordinates
-        feature['geometry']['coordinates'] = [row[lon],row[lat]]
+        feature["geometry"]["coordinates"] = [row[lon],row[lat]]
 
         # for each column, get the value and add it as a new feature property
         for prop in properties:
-            feature['properties'][prop] = row[prop]
+            feature["properties"][prop] = row[prop]
 
         # add this feature (aka, converted dataframe row) to the list of features inside our dict
-        geojson['features'].append(feature)
+        geojson["features"].append(feature)
+
 
     #### Uncomment for return geojson
-    if output_type == 'return':
-        return geojson
+    if output_type == "return":
+        geojson_str = json.dumps(geojson, indent=2)
+        return geojson_str
 
     #### OR uncomment below to create .js file
     # save the geojson result to a file
-    elif output_type == 'save_js':
-        output_filename = 'dataset.js'
-        with open(output_filename, 'w') as output_file:
-            output_file.write('var dataset = {};'.format(geojson))
+    elif output_type == "save_js":
+        geojson_str = json.dumps(geojson, indent=2)
+
+        output_filename = "dataset.js"
+        with open(output_filename, "w") as output_file:
+            output_file.write(geojson_str)
+            #output_file.write("var dataset = {};".format(geojson))
