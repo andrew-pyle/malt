@@ -8,13 +8,36 @@
  *  "watercolor"
  **************/
 
-// TODO Create AJAX call back to flask to get the map markers and .addTo(map)
 
+// Initialize Map
+var map = L.map('mapid').setView([34.7, -92.3], 13);
+
+// Load Stamen Tile Layer
 var layer = new L.StamenTileLayer("toner-lite");
-var map = new L.Map("mapid", {
-    center: new L.LatLng(34.7, -92.3),
-    zoom: 12
-});
 map.addLayer(layer);
 
-var marker = L.marker([34.7, -92.3]).addTo(map);
+// Add Dummy Marker
+// var marker = L.marker([34.7, -92.3]).addTo(map);
+
+// load GeoJSON from an external file
+// $.getJSON('assets/js/dataset.js',function(data){
+//   // add GeoJSON layer to the map once the file is loaded
+//   L.geoJson(data).addTo(map);
+// });
+
+var marker = L.geoJson({
+  "type": "FeatureCollection",
+  "features": [
+  {"geometry": {"coordinates": [-92.5868279, 34.5645372],
+    "type": "Point"},
+   "properties": {"Account Name": "xxxxxxxxxxxx",
+    "City": "Benton",
+    "IP Address": "108.64.45.187"},
+   "type": "Feature"}
+  ]
+}).addTo(map);
+
+// TODO
+// 1. Fix pandas-to-geojson.py '' -> ""
+// 2. Link dataset.js (rename?) to leafletMapCustom.js (Apache serving)
+// 3. Add markers to leaflet
