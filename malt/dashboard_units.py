@@ -223,31 +223,3 @@ def DataTable(df):
     #     include_plotlyjs=False,
     #     show_link=False,
     #     )
-<<<<<<< HEAD:MALT-development/app.py
-
-## URL Routing
-@app.route("/")
-def index():
-    return render_template(
-        "index.html",
-        account_distribution = AccountDistribution(),
-        location_distribution = LocationDistribution(),
-        time_of_day_distribtion = TimeOfDayDistribution(),
-        ip_address_distribution_today = IPAddressDistributionToday(),
-        # data_table = DataTable(),
-        )
-
-
-@app.route("/login", methods=["GET","POST"])
-def login():
-    if (request.method == 'GET'):
-        return render_template('login.html')
-    elif (request.method == 'POST'):
-        username_submit = request.form['username']
-        password_submit = request.form['password']
-        return str(cur.execute("SELECT * FROM MaltUsers WHERE UserName='{}';".format(username_submit)))
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
-=======
->>>>>>> master:malt/dashboard_units.py
