@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 #OS junk files
 [Tt]humbs.db
 *.DS_Store
 
 #Compiled Python Files
-=======
-
-*.pyc
-
->>>>>>> master
 *.pyc
