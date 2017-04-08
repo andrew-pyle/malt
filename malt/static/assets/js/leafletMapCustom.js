@@ -10,7 +10,7 @@
 
 
 // Initialize Map
-var map = L.map('mapid').setView([34.7, -92.3], 13);
+var map = L.map("mapid").setView([34.7, -92.3], 13);
 
 // Load Stamen Tile Layer
 var layer = new L.StamenTileLayer("toner-lite");
