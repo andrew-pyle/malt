@@ -36,14 +36,15 @@ import pandas as pd
 from flask_mysqldb import MySQL
 
 import dashboard_units as dash
-import df_process as process
+from df_process import create_df
+from df_process import filter_df
 
 app = Flask(__name__)
 
 
 ## Import flat JSON file with data sample for development
 data = "data.json"
-df = process.create_df(data)
+df = create_df(data)
 df.index += 1
 
 
@@ -72,7 +73,7 @@ def index():
 
 @app.route("/query/")
 def query():
-    return request.args['radius']
+    return filter_df(df, radius=int(request.args['radius']), latitude=int(request.args['latitude']), longitude=int(request.args['longitude']))
 
 
 if __name__ == '__main__':

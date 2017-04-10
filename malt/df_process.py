@@ -11,7 +11,8 @@ def create_df(data):
 
 
 # Pandas DataFrame Query
-def query_df(df, latitude=None, longitude=None, start_date=None, end_date=None, start_time=None, end_time=None):
+def filter_df(df, radius=None, latitude=None, longitude=None, start_date=None, end_date=None, start_time=None, end_time=None):
+    ''' Selects rows in a dataframe within a search radius (in km) around a latitude/longitude coordinate point'''
+    filtered_df = df[((df['Latitude']<= latitude + (radius / 111)) & (df['Latitude']>= latitude - (radius / 111)) & ((df['Longitude']<= longitude + (radius / 111)) & (df['Longitude']>= longitude - (radius / 111))))]
 
-
-    return df
+    return filtered_df.to_string()
