@@ -34,34 +34,70 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
       </div>
       <div class="navbar-collapse collapse">
         <div class="nav navbar-nav navbar-left">
-          <div class="filters">
-            Radius (km)
-            <input type="number" id="radius-value" class="form-control" value="">
-          </div>
-          <div class="filters">
-            Latitude
-            <input type="number" step="any" id="coordinates-lat" class="form-control">
-          </div>
-          <div class="filters">
-            Longitude
-            <input type="number" step="any" id="coordinates-lng" class="form-control" placeholder="32">
-          </div>
-          <div class="filters" id="datefilter">
-            Start Date
-            <input type="date" id="timeframe-start" class="form-control" placeholder="mm/dd/yyyy">
-          </div>
-          <div class="filters" id="datefilter">
-            End Date
-            <input type="date" id="timeframe-end" class="form-control" placeholder="mm/dd/yyyy">
-          </div>
-          <div class="filters" id="timefilter">
-            Start Time
-            <input type="time" id="timeframe-start" class="form-control" placeholder="hh:mm ss">
-          </div>
-          <div class="filters" id="timefilter">
-            End Time
-            <input type="time" id="timeframe-end" class="form-control" placeholder="hh:mm ss">
-          </div>
+          <form action="/query">
+            <div class="filters">
+              Radius (km)
+              <input name="radius" type="number" id="radius" class="form-control">
+            </div>
+            <div class="filters">
+              Latitude
+              <input name="latitude" type="number" step="any" id="latitude" class="form-control">
+            </div>
+            <div class="filters">
+              Longitude
+              <input name="longitude" type="number" step="any" id="longitude" class="form-control" placeholder="">
+            </div>
+            <div class="filters" id="datefilter">
+              Start Date
+              <input name="start_date" type="date" id="date-start" class="form-control" placeholder="mm/dd/yyyy">
+            </div>
+            <div class="filters" id="datefilter">
+              End Date
+              <input name="end_date" type="date" id="date-end" class="form-control" placeholder="mm/dd/yyyy">
+            </div>
+            <div class="filters" id="timefilter">
+              Start Time
+              <input name="start_time" type="time" id="time-start" class="form-control" placeholder="hh:mm ss">
+            </div>
+            <div class="filters" id="timefilter">
+              End Time
+              <input name="end_time" type="time" id="time-end" class="form-control" placeholder="hh:mm ss">
+            </div>
+            <div class="filters">
+              <input type="submit" id="refresh" class="btn btn-primary btn-block" value="Refresh"></button>
+            </div>
+          </form>
+          <!-- <script type="text/javascript">
+          $(function(){
+            $('#refresh').click(function(){
+              var radius = $('#raduis').val();
+              var latitude = $('#latitude').val();
+              var longitude = $('#longitude').val();
+              var start_date = $('#date-start').val();
+              var end_date = $('#date-end').val();
+              var start_time = $('#time-start').val();
+              var end_time = $('#time-end').val();
+              $.ajax({
+                type: 'GET',
+                url: '/query',
+
+                data: $()
+              })
+
+            });
+          });
+
+          $("#refresh").click(function(){
+            $.getElementById('')
+          });
+
+
+          $("button").click(function(){
+            $.get("demo_test.asp", function(data, status){
+              alert("Data: " + data + "\nStatus: " + status);
+            });
+          });
+          </script> -->
         </div>
       </div>
     </div>

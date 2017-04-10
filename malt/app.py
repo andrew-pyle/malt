@@ -31,16 +31,19 @@ TODO:
 
 from flask import Flask
 from flask import render_template
-import dashboard_units as dash
+from flask import request
 import pandas as pd
 from flask_mysqldb import MySQL
+
+import dashboard_units as dash
+import df_process as process
 
 app = Flask(__name__)
 
 
 ## Import flat JSON file with data sample for development
 data = "data.json"
-df = pd.read_json(data)
+df = process.create_df(data)
 df.index += 1
 
 
@@ -49,17 +52,28 @@ MySQL.MYSQL_HOST = 'localhost'
 MySQL.MYSQL_***REMOVED***
 mysql = MySQL(app)
 
+
 ## URL Routing
 @app.route("/")
 def index():
+    # account_distribution = dash.AccountDistribution(create_df()),
+    # location_distribution = dash.LocationDistribution(df),
+    # time_of_day_distribtion = dash.TimeOfDayDistribution(df),
+    # ip_address_distribution_today = dash.IPAddressDistributionToday(df),
+    # data_table = dash.DataTable(df)
     return render_template(
         "index.html",
         account_distribution = dash.AccountDistribution(df),
         location_distribution = dash.LocationDistribution(df),
         time_of_day_distribtion = dash.TimeOfDayDistribution(df),
         ip_address_distribution_today = dash.IPAddressDistributionToday(df),
-        data_table = dash.DataTable(df),
-        )
+        data_table = dash.DataTable(df),)
+
+
+@app.route("/query/")
+def query():
+    return request.args['radius']
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

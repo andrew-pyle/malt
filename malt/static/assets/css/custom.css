@@ -20,6 +20,10 @@
   width: 75px;
 }
 
+#refresh {
+  margin-top: 20px;
+}
+
 #map-panel {
   position: fixed;
   height: 85%;
