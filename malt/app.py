@@ -29,6 +29,7 @@ TODO:
   - AJAX query for leafletMapCustom.js to fetch markers (lat/long)
 '''
 
+import datetime
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -57,23 +58,31 @@ mysql = MySQL(app)
 ## URL Routing
 @app.route("/")
 def index():
-    # account_distribution = dash.AccountDistribution(create_df()),
-    # location_distribution = dash.LocationDistribution(df),
-    # time_of_day_distribtion = dash.TimeOfDayDistribution(df),
-    # ip_address_distribution_today = dash.IPAddressDistributionToday(df),
-    # data_table = dash.DataTable(df)
-    return render_template(
-        "index.html",
+    return render_template("index.html",
         account_distribution = dash.AccountDistribution(df),
         location_distribution = dash.LocationDistribution(df),
         time_of_day_distribtion = dash.TimeOfDayDistribution(df),
         ip_address_distribution_today = dash.IPAddressDistributionToday(df),
-        data_table = dash.DataTable(df),)
+        data_table = dash.DataTable(df))
 
 
 @app.route("/query/")
 def query():
-    return filter_df(df, radius=int(request.args['radius']), latitude=int(request.args['latitude']), longitude=int(request.args['longitude']))
+    #return str(request.args.getlist('latitude'))
+    subsetdf =  filter_df(df, radius=request.args['radius'],
+                  latitude=request.args['latitude'],
+                  longitude=request.args['longitude'],
+                  start_date=request.args['start_date'],
+                  end_date=request.args['end_date'],
+                  start_time=request.args['start_time'],
+                  end_time=request.args['end_time'])
+    return render_template("index.html",
+        account_distribution = dash.AccountDistribution(subsetdf),
+        location_distribution = dash.LocationDistribution(subsetdf),
+        time_of_day_distribtion = dash.TimeOfDayDistribution(subsetdf),
+        ip_address_distribution_today = dash.IPAddressDistributionToday(subsetdf),
+        data_table = dash.DataTable(subsetdf))
+
 
 
 if __name__ == '__main__':
