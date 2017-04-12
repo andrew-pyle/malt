@@ -82,16 +82,18 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
           <div id="mapid" class="chart-stage">
             <script>
               // Initialize Map: ([latitude, longitude], zoom-level)
-              var map = L.map("mapid").setView([34.7, -92.3], 13);
+              var map = L.map("mapid").setView([34.7464809, -92.2895947], 13);
 
               // Load Stamen Tile Layer
               var layer = new L.StamenTileLayer("toner-lite");
               map.addLayer(layer);
 
               //Add Markers
-              var marker = L.marker([34.7, -92.3]).addTo(map);
-              {% for x in markers %}
-                L.marker( {{ x }} ).addTo(map)
+              // Load from Jinja2 variable "marker" (list of lists)
+              {% for record in markers %}
+                var marker = L.marker( {{ [record[0], record[1]] }} ).addTo(map)
+                // Format the Popup with HTML!!
+                .bindPopup( "{{record[2]}}, {{record[3]}}, {{record[4]}}, {{record[5]}}, {{record[6]}}");
               {% endfor %}
 
               // load GeoJSON markers from an external file
@@ -182,8 +184,9 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
   </script>
 
   <script type="text/javascript" src="../static/assets/lib/keen-js/dist/keen.min.js"></script>
-  <!-- <script type="text/javascript" src="../static/assets/js/meta.js"></script> -->
-  <script type='text/javascript' src='../static/assets/js/leafletMapCustom.js'></script>
+
+  <!-- Put into this .html file -->
+  <!-- <script type='text/javascript' src='../static/assets/js/leafletMapCustom.js'></script> -->
 
 </body>
 </html>
