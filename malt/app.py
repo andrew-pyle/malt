@@ -63,12 +63,14 @@ def index():
         location_distribution = dash.LocationDistribution(df),
         time_of_day_distribtion = dash.TimeOfDayDistribution(df),
         ip_address_distribution_today = dash.IPAddressDistributionToday(df),
-        data_table = dash.DataTable(df))
+        data_table = dash.DataTable(df),
+        markers = df[['Latitude', 'Longitude']].values.tolist(),
+        #popup = df[['Account Name','City','State','Latitude', 'Longitude']].values.tolist()
+        )
 
 
 @app.route("/query/")
 def query():
-    #return str(request.args.getlist('latitude'))
     subsetdf =  filter_df(df, radius=request.args['radius'],
                   latitude=request.args['latitude'],
                   longitude=request.args['longitude'],
@@ -81,7 +83,8 @@ def query():
         location_distribution = dash.LocationDistribution(subsetdf),
         time_of_day_distribtion = dash.TimeOfDayDistribution(subsetdf),
         ip_address_distribution_today = dash.IPAddressDistributionToday(subsetdf),
-        data_table = dash.DataTable(subsetdf))
+        data_table = dash.DataTable(subsetdf),
+        markers = subsetdf[['Latitude', 'Longitude']].values.tolist())
 
 
 

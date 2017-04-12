@@ -67,37 +67,6 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
               <input type="submit" id="refresh" class="btn btn-primary btn-block" value="Refresh"></button>
             </div>
           </form>
-          <!-- <script type="text/javascript">
-          $(function(){
-            $('#refresh').click(function(){
-              var radius = $('#raduis').val();
-              var latitude = $('#latitude').val();
-              var longitude = $('#longitude').val();
-              var start_date = $('#date-start').val();
-              var end_date = $('#date-end').val();
-              var start_time = $('#time-start').val();
-              var end_time = $('#time-end').val();
-              $.ajax({
-                type: 'GET',
-                url: '/query',
-
-                data: $()
-              })
-
-            });
-          });
-
-          $("#refresh").click(function(){
-            $.getElementById('')
-          });
-
-
-          $("button").click(function(){
-            $.get("demo_test.asp", function(data, status){
-              alert("Data: " + data + "\nStatus: " + status);
-            });
-          });
-          </script> -->
         </div>
       </div>
     </div>
@@ -111,7 +80,26 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
             Malicious Login Alert Locations
           </div>
           <div id="mapid" class="chart-stage">
-              <!-- <img data-src="holder.js/100%x120/white"> -->
+            <script>
+              // Initialize Map: ([latitude, longitude], zoom-level)
+              var map = L.map("mapid").setView([34.7, -92.3], 13);
+
+              // Load Stamen Tile Layer
+              var layer = new L.StamenTileLayer("toner-lite");
+              map.addLayer(layer);
+
+              //Add Markers
+              var marker = L.marker([34.7, -92.3]).addTo(map);
+              {% for x in markers %}
+                L.marker( {{ x }} ).addTo(map)
+              {% endfor %}
+
+              // load GeoJSON markers from an external file
+              // $.getJSON("../static/assets/js/dataset.geojson",function(data){
+              //   // add GeoJSON layer to the map once the file is loaded
+              //   L.geoJson(data).addTo(map);
+              // });
+            </script>
           </div>
           <div class="chart-notes">
             Click a marker to see the associated alert information.
@@ -178,7 +166,7 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
               {{data_table | safe}}
           </div>
           <div class="chart-notes">
-            Last Notes
+
           </div>
         </div>
       </div>
