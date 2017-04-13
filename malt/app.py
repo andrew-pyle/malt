@@ -34,8 +34,6 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import pandas as pd
-from flask_mysqldb import MySQL
-
 import dashboard_units as dash
 from df_process import create_df
 from df_process import filter_df
@@ -47,12 +45,6 @@ app = Flask(__name__)
 data = "data.json"
 df = create_df(data)
 df.index += 1
-
-
-# MySQL Connection
-MySQL.MYSQL_HOST = 'localhost'
-MySQL.MYSQL_***REMOVED***
-mysql = MySQL(app)
 
 
 ## URL Routing
