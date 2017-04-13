@@ -58,33 +58,52 @@ mysql = MySQL(app)
 ## URL Routing
 @app.route("/")
 def index():
+    url_args = {
+    'radius': '',
+    'latitude': '',
+    'longitude': '',
+    'start_date': '',
+    'end_date': '',
+    'start_time': '',
+    'end_time': ''
+    }
     return render_template("index.html",
         account_distribution = dash.AccountDistribution(df),
         location_distribution = dash.LocationDistribution(df),
         time_of_day_distribtion = dash.TimeOfDayDistribution(df),
         ip_address_distribution_today = dash.IPAddressDistributionToday(df),
         data_table = dash.DataTable(df),
-        #markers = df[['Latitude', 'Longitude','Account Name','City','State','Date','IP Address']].values.tolist(),
-        iterrows = df.iterrows())
+        iterrows = df.iterrows(),
+        filter_vals = url_args)
 
 
 @app.route("/query/")
 def query():
-    subsetdf =  filter_df(df, radius=request.args['radius'],
-                  latitude=request.args['latitude'],
-                  longitude=request.args['longitude'],
-                  start_date=request.args['start_date'],
-                  end_date=request.args['end_date'],
-                  start_time=request.args['start_time'],
-                  end_time=request.args['end_time'])
+    url_args = {
+    'radius': request.args['radius'],
+    'latitude': request.args['latitude'],
+    'longitude': request.args['longitude'],
+    'start_date': request.args['start_date'],
+    'end_date': request.args['end_date'],
+    'start_time': request.args['start_time'],
+    'end_time': request.args['end_time']
+    }
+    subsetdf = filter_df(df,
+                radius = url_args['radius'],
+                latitude = url_args['latitude'],
+                longitude = url_args['longitude'],
+                start_date = url_args['start_date'],
+                end_date = url_args['end_date'],
+                start_time = url_args['start_time'],
+                end_time = url_args['end_time'])
     return render_template("index.html",
         account_distribution = dash.AccountDistribution(subsetdf),
         location_distribution = dash.LocationDistribution(subsetdf),
         time_of_day_distribtion = dash.TimeOfDayDistribution(subsetdf),
         ip_address_distribution_today = dash.IPAddressDistributionToday(subsetdf),
         data_table = dash.DataTable(subsetdf),
-        #markers = subsetdf[['Latitude', 'Longitude','Account Name','City','State','Date','IP Address']].values.tolist()
-        iterrows = df.iterrows())
+        iterrows = subsetdf.iterrows(),
+        filter_vals = url_args)
 
 
 

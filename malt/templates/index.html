@@ -38,31 +38,31 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
           <form action="/query">
             <div class="filters">
               Radius (km)
-              <input name="radius" type="number" id="radius" class="form-control">
+              <input name="radius" type="number" id="radius" class="form-control" value={{ filter_vals['radius'] }}>
             </div>
             <div class="filters">
               Latitude
-              <input name="latitude" type="number" step="any" id="latitude" class="form-control">
+              <input name="latitude" type="number" step="any" id="latitude" class="form-control" value={{ filter_vals['latitude'] }}>
             </div>
             <div class="filters">
               Longitude
-              <input name="longitude" type="number" step="any" id="longitude" class="form-control" placeholder="">
+              <input name="longitude" type="number" step="any" id="longitude" class="form-control" placeholder="" value={{ filter_vals['longitude'] }}>
             </div>
             <div class="filters" id="datefilter">
               Start Date
-              <input name="start_date" type="date" id="date-start" class="form-control" placeholder="mm/dd/yyyy">
+              <input name="start_date" type="date" id="date-start" class="form-control" placeholder="mm/dd/yyyy" value={{ filter_vals['start_date'] }}>
             </div>
             <div class="filters" id="datefilter">
               End Date
-              <input name="end_date" type="date" id="date-end" class="form-control" placeholder="mm/dd/yyyy">
+              <input name="end_date" type="date" id="date-end" class="form-control" placeholder="mm/dd/yyyy" value={{ filter_vals['end_date'] }}>
             </div>
             <div class="filters" id="timefilter">
               Start Time
-              <input name="start_time" type="time" id="time-start" class="form-control" placeholder="hh:mm ss">
+              <input name="start_time" type="time" id="time-start" class="form-control" placeholder="hh:mm ss" value={{ filter_vals['start_time'] }}>
             </div>
             <div class="filters" id="timefilter">
               End Time
-              <input name="end_time" type="time" id="time-end" class="form-control" placeholder="hh:mm ss">
+              <input name="end_time" type="time" id="time-end" class="form-control" placeholder="hh:mm ss" value={{ filter_vals['end_time'] }}>
             </div>
             <div class="filters">
               <input type="submit" id="refresh" class="btn btn-primary btn-block" value="Refresh"></button>
@@ -89,30 +89,33 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
               var layer = new L.StamenTileLayer("toner-lite");
               map.addLayer(layer);
 
-              // Add Markers
+              // Add Markers from dataframe in memory in Flask
               /* Jinja2 variable iterrows passes an iterable pandas dataframe object for the Jinja2
                  template language to iterate over */
+
+
               {% for index, row in iterrows %}
                 var marker = L.marker( {{ [row['Latitude'], row['Longitude']] }} ).addTo(map)
                 // Format the Popup with HTML!!
                 .bindPopup( "{{row['Account Name']}}, {{row['Date']}}, {{row['City']}}, {{row['State']}}, {{row['IP Address']}}");
+
               {% endfor %}
 
-              // load GeoJSON markers from an external file
+              //console.log(markers.getBounds());
+
+              // Load GeoJSON markers from an external file
               // $.getJSON("../static/assets/js/dataset.geojson",function(data){
               //   // add GeoJSON layer to the map once the file is loaded
               //   L.geoJson(data).addTo(map);
               // });
 
               // Add Search radius
-              var circle = L.circle([34.7464809, -92.2895947], {
+              var circle = L.circle([{{filter_vals['latitude']}},{{filter_vals['longitude']}}], {
                 color: 'red',
                 fillColor: '#f03',
                 fillOpacity: 0.5,
-                radius: 500
+                radius: ({{filter_vals['radius']}} * 1000)
               }).addTo(map);
-
-              console.log($("#longitude").val())
 
               // if ($("#radius").val() != ""){
               //   var circle = L.circle([$("#longitude").val(), $("#latitude").val()], {
@@ -125,7 +128,7 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
             </script>
           </div>
           <div class="chart-notes">
-            Click a marker to see the associated alert information.
+            {{ filter_vals }}<!-- Click a marker to see the associated alert information. -->
           </div>
         </div>
       </div>
