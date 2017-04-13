@@ -12,6 +12,7 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
   <link rel="stylesheet" href="../static/assets/css/custom.css" />
   <link rel="icon" href="../static/assets/img/favicon.ico">
+  <script type="text/javascript" src="../static/assets/lib/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript" src="../static/assets/js/plotly.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
   <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
@@ -88,12 +89,13 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
               var layer = new L.StamenTileLayer("toner-lite");
               map.addLayer(layer);
 
-              //Add Markers
-              // Load from Jinja2 variable "marker" (list of lists)
-              {% for record in markers %}
-                var marker = L.marker( {{ [record[0], record[1]] }} ).addTo(map)
+              // Add Markers
+              /* Jinja2 variable iterrows passes an iterable pandas dataframe object for the Jinja2
+                 template language to iterate over */
+              {% for index, row in iterrows %}
+                var marker = L.marker( {{ [row['Latitude'], row['Longitude']] }} ).addTo(map)
                 // Format the Popup with HTML!!
-                .bindPopup( "{{record[2]}}, {{record[3]}}, {{record[4]}}, {{record[5]}}, {{record[6]}}");
+                .bindPopup( "{{row['Account Name']}}, {{row['Date']}}, {{row['City']}}, {{row['State']}}, {{row['IP Address']}}");
               {% endfor %}
 
               // load GeoJSON markers from an external file
@@ -101,6 +103,25 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
               //   // add GeoJSON layer to the map once the file is loaded
               //   L.geoJson(data).addTo(map);
               // });
+
+              // Add Search radius
+              var circle = L.circle([34.7464809, -92.2895947], {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+                radius: 500
+              }).addTo(map);
+
+              console.log($("#longitude").val())
+
+              // if ($("#radius").val() != ""){
+              //   var circle = L.circle([$("#longitude").val(), $("#latitude").val()], {
+              //     color: 'red',
+              //     fillColor: '#f03',
+              //     fillOpacity: 0.5,
+              //     radius: $("#radius").val()
+              //   }).addTo(mymap);
+              //}
             </script>
           </div>
           <div class="chart-notes">
@@ -175,7 +196,6 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
     </div>
   </div>
 
-  <script type="text/javascript" src="../static/assets/lib/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript" src="../static/assets/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 
   <script type="text/javascript" src="../static/assets/lib/holderjs/holder.js"></script>
