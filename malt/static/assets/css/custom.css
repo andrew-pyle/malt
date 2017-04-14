@@ -1,7 +1,42 @@
+.filters {
+  font-size: 14px;
+  color: #fbfbfb;
+  text-decoration: none;
+  padding: 10px 5px;
+  width: 100px;
+  float: left;
+}
+
+#datefilter {
+  width: 195px;
+}
+
+#timefilter {
+  width: 140px
+}
+
+#refresh {
+  margin-top: 20px;
+}
+
+#map-panel {
+  position: fixed;
+  height: 85%;
+}
+
+#map-wrapper {
+  height: inherit;
+}
+
 #mapid {
-  height: 400px;
+  height
   border-right: 1px solid #d7d7d7;
   overflow: hidden;
+  height: inherit;
+}
+
+#charts-panel {
+  left: 50%;
 }
 
 table.dataframe {
@@ -19,11 +54,12 @@ thead th{
 }
 
 tbody {
-  border: none;
+  border: none
+  padding: 8px;
 }
 th {
   border: none;
-  padding: 8px;
+  padding: 5px;
 }
 tr:nth-child(odd) { background-color: #d9d9d9; }
 tr:nth-child(even) { background-color: #ffffff; }
