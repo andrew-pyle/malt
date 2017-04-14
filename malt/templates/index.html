@@ -83,48 +83,31 @@ Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT 
           <div id="mapid" class="chart-stage">
             <script>
               // Initialize Map: ([latitude, longitude], zoom-level)
-              var map = L.map("mapid").setView([34.7464809, -92.2895947], 13);
+              var map = L.map("mapid").setView([34.725237, -92.340925], 13);
 
               // Load Stamen Tile Layer
               var layer = new L.StamenTileLayer("toner-lite");
               map.addLayer(layer);
 
               // Add Markers from dataframe in memory in Flask
-              /* Jinja2 variable iterrows passes an iterable pandas dataframe object for the Jinja2
-                 template language to iterate over */
-
-
-              {% for index, row in iterrows %}
-                var marker = L.marker( {{ [row['Latitude'], row['Longitude']] }} ).addTo(map)
+              //   Jinja2 variable iterrows passes an iterable pandas dataframe object for the Jinja2
+              //   template language to iterate over
+              {% for index, row in iterrows %} // Iterate over all rows in dataframe matching query. If query blank, every row is passed in "iterrows"
+                var marker = L.marker({{[row['Latitude'], row['Longitude']]}}).addTo(map)
                 // Format the Popup with HTML!!
-                .bindPopup( "{{row['Account Name']}}, {{row['Date']}}, {{row['City']}}, {{row['State']}}, {{row['IP Address']}}");
-
+                .bindPopup( "{{row['Account Name']}}, {{row['Date']}}, {{row['City']}}, {{row['State']}}, {{row['IP Address']}}"); // Assign values from dataframe row to its popup
               {% endfor %}
 
-              //console.log(markers.getBounds());
-
-              // Load GeoJSON markers from an external file
-              // $.getJSON("../static/assets/js/dataset.geojson",function(data){
-              //   // add GeoJSON layer to the map once the file is loaded
-              //   L.geoJson(data).addTo(map);
-              // });
-
-              // Add Search radius
-              var circle = L.circle([{{filter_vals['latitude']}},{{filter_vals['longitude']}}], {
-                color: 'red',
-                fillColor: '#f03',
-                fillOpacity: 0.5,
-                radius: ({{filter_vals['radius']}} * 1000)
-              }).addTo(map);
-
-              // if ($("#radius").val() != ""){
-              //   var circle = L.circle([$("#longitude").val(), $("#latitude").val()], {
-              //     color: 'red',
-              //     fillColor: '#f03',
-              //     fillOpacity: 0.5,
-              //     radius: $("#radius").val()
-              //   }).addTo(mymap);
-              //}
+              // Add Search radius circle if radius, latitude, and longitude are submitted on the form
+              {% if filter_vals['radius'] != '' and filter_vals['latitude'] != '' and filter_vals['longitude'] != '' %}
+                var circle = L.circle([{{filter_vals['latitude']}},{{filter_vals['longitude']}}], {
+                  color: 'red',
+                  fillColor: '#f03',
+                  fillOpacity: 0.25,
+                  radius: ({{filter_vals['radius']}} * 1000)
+                }).addTo(map);
+                map.fitBounds(circle.getBounds()); // Set map view to the search radius
+              {% endif %}
             </script>
           </div>
           <div class="chart-notes">

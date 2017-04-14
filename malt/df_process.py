@@ -11,13 +11,8 @@ def create_df(data):
 
 
 # Pandas DataFrame Query
-def filter_df(df, radius='',
-                  latitude='',
-                  longitude='',
-                  start_date='',
-                  end_date='',
-                  start_time='',
-                  end_time=''):
+def filter_df(df, radius='', latitude='', longitude='',
+              start_date='', end_date='', start_time='', end_time=''):
     ''' Selects rows in a dataframe within a search radius (in km)
     around a latitude/longitude coordinate point'''
 
