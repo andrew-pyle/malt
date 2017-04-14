@@ -1,11 +1,28 @@
+'''
+MALT Dashboard Data Manipulation module
+
+DataFrame column names expected:
+ - df['Account Name']
+ - df['City']
+  - df['State']
+ - df['Country']
+ - df['Date']
+ - df['Time']
+ - df['IP Address']
+ - df['Latitude']
+ - df['Longitude']
+ '''
+
 import pandas as pd
 
 # Pandas DataFrame Generation
 def create_df(data):
-    ## Import flat JSON file with data sample for development
-    data = "data.json"
+    ''' Creates pandas dataframe in memory from the data source'''
+    ## JSON file data source (for development)
     df = pd.read_json(data)
     df.index += 1
+
+    ## MySQL data source
 
     return df
 

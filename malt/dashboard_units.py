@@ -1,3 +1,8 @@
+'''
+MALT Dashboard Charting module
+Uses the Plotly Python API to create charts based on a pandas dataframe.
+'''
+
 import pandas as pd
 import plotly.offline
 import plotly.graph_objs as go

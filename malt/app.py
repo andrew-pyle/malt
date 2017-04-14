@@ -1,32 +1,19 @@
 '''
-MALT - Flask Web Application
------------------------------------------------
-Andrew Pyle, Zhenlin Jin, Hanzhao Chen
+MALT Dashboard
+
+by: Andrew Pyle, Zhenlin Jin, Hanzhao Chen
 UA LITTLE ROCK DEPARTMENT OF COMPUTER SCIENCE
------------------------------------------------
-This python applicaiton routes HTTP requests, manipulates data (Pandas Library), creates charts
-(Plotly Python API). The static CSS and JS files are under static/assets. This is requrired for
-Flask to serve them in production. The web server should serve these files in production.
 
-The data manipulation and charting functions are defined below. They expect a Pandas DataFrame with
+DESCRIPTION:
+As a part of the MALT: Malicious Login Tracker system, MALT Dashboard serves as the front-end.
+This Flask web app routes HTTP requests, manipulates data (Pandas Library),
+and creates charts (Plotly Python API).
+
+The static CSS and JS files are under static/assets. This is requrired for
+Flask to serve them during development. The web server should serve these files in production.
+
+The data manipulation and charting modules are imported below. They expect a Pandas DataFrame with
 The data to be visualized.
-
-DataFrame columns expected (as of 23 Mar 2017):
- - df['Account Name']
- - df['City']
- - df['Hour']
- - df[['Country']
- - df['State']
- - df['City']
- - df['Date']
- - df['Time']
- - df['IP Address']
-
-TODO:
- - Create python function to query a database for the data and feed it to the functions (save it in
- memory or query in each function?)
-  - Create markers for the leaflet map. (Database query)
-  - AJAX query for leafletMapCustom.js to fetch markers (lat/long)
 '''
 
 import datetime
