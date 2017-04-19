@@ -10,57 +10,11 @@ import plotly.graph_objs as go
 
 
 ## Plotly Chart generation functions
-def AccountDistribution(df):
-#   Change IP Address column to account column - sample data had accounts redacted
-    ipSeries = df["IP Address"].value_counts()
-    ipFrame = pd.DataFrame({'ipAddress' : ipSeries.index, 'login count' : ipSeries.values})
-    trace = [
-        go.Bar(
-            x = ipFrame["ipAddress"],
-            y = ipFrame["login count"],
-            #width = 0.9,
-            marker = dict(
-                color='#fe9aa2',
-                line=dict(
-                    color='#fe3445',
-                    width=1.5,
-                    ),
-                #colorbar = dict(
-                #    thickness = 1,
-                #   ),
-                ),
-            opacity=0.8,
-            ),
-        ]
-    layout = go.Layout(
-        margin = dict(
-            l=50,
-            r=50,
-            t=10,
-            b=50,
-            ),
-        xaxis = dict(
-            #title = "Account Name",
-            showticklabels = True,
-            tickmode = 'auto',
-            nticks = 10,
-            tickfont = dict(
-                size=10,
-                ),
-            ),
-        yaxis = dict(
-            #title = "Frequency"
-            ),
-    )
-    accounts = go.Figure(data=trace, layout=layout)
-    return plotly.offline.plot(
-        accounts,
-        output_type='div',
-        include_plotlyjs=False,
-        show_link=False,
-        )
-
 def LocationDistribution(df):
+    ''' Plotly API call. Creates a histogram of cities, ordered from largest to smallest. Plotly does not have the
+    capability to order bars in a histogram, so a new dataframe with the proper order is created
+    and a Bar Chart is used. '''
+
     citySeries = df['City'].value_counts()
     cityFrame = pd.DataFrame({'city' : citySeries.index, 'count' : citySeries.values})
     trace = [
@@ -100,15 +54,78 @@ def LocationDistribution(df):
         show_link=False,
         )
 
+
+def AccountDistribution(df):
+    ''' Plotly API call. Creates a histogram of accounts, ordered from largest to smallest. Plotly does not have the
+    capability to order bars in a histogram, so a new dataframe with the proper order is created
+    and a Bar Chart is used. '''
+    # Change IP Address column to account column - sample data had accounts redacted: DONE
+
+    accountSeries = df["Account Name"].value_counts()
+    accountFrame = pd.DataFrame({'accountName' : accountSeries.index, 'login count' : accountSeries.values})
+    trace = [
+        go.Bar(
+            x = accountFrame["accountName"],
+            y = accountFrame["login count"],
+            #width = 0.9,
+            marker = dict(
+                color='#fe9aa2',
+                line=dict(
+                    color='#fe3445',
+                    width=1.5,
+                    ),
+                #colorbar = dict(
+                #    thickness = 1,
+                #   ),
+                ),
+            opacity=0.8,
+            ),
+        ]
+    layout = go.Layout(
+        margin = dict(
+            l=50,
+            r=50,
+            t=10,
+            b=50,
+            ),
+        xaxis = dict(
+            #title = "Account Name",
+            showticklabels = True,
+            tickmode = 'auto',
+            nticks = 10,
+            tickfont = dict(
+                size=10,
+                ),
+            ),
+        yaxis = dict(
+            #title = "Frequency"
+            ),
+    )
+    accounts = go.Figure(data=trace, layout=layout)
+    return plotly.offline.plot(
+        accounts,
+        output_type='div',
+        include_plotlyjs=False,
+        show_link=False,)
+
+
+
 def TimeOfDayDistribution(df):
-    # Declare variables for layout below. I couldn't figure out how to create them inline.
+    ## Change Time column to proper column name after mySQL connection
+    ''' Plotly API call. Creates a histogram of all alerts by hour-of-day, ordered from 00:00 to 24:00.
+    Plotly does not have the capability to order bars in a histogram, so a new dataframe with the
+    proper order is created and a Bar Chart is used. Additionally, custom tick marks are used to
+    show each bin as "xx:xx" rather than as a continuous variable. '''
+
+    # Declare variables for layout below. I couldn't figure out how to create them inline within
+    # the Plotly API code.
     hours_list = list(range(0,25))
     hours_format_list = []
     for x in range(0,25):
         hours_format_list.append('{}:00'.format(x))
 
 
-    timeSeries = df["Hour"].value_counts()
+    timeSeries = df["Time"].dt.hour.value_counts()
     timeFrame = pd.DataFrame({'Time':timeSeries.index, 'Count':timeSeries.values})
     trace = [
         go.Bar(
@@ -158,6 +175,12 @@ def TimeOfDayDistribution(df):
         )
 
 def IPAddressDistributionToday(df):
+    ## Change Date column to proper column name after mySQL connection
+    ''' Plotly API call. Creates a histogram of all alerts by hour-of-day, ordered from 00:00 to 24:00.
+    Plotly does not have the capability to order bars in a histogram, so a new dataframe with the
+    proper order is created and a Bar Chart is used. Additionally, custom tick marks are used to
+    show each bin as "xx:xx" rather than as a continuous variable. '''
+
     ipSeries = df.loc[df.Date >= pd.to_datetime('today')]['IP Address'].value_counts()
     ipFrame = pd.DataFrame({'ipAddress' : ipSeries.index, 'login count' : ipSeries.values})
     trace = [
@@ -208,8 +231,8 @@ def IPAddressDistributionToday(df):
 
 
 def DataTable(df):
-    # df = pd.DataFrame(db_connection()).to_html()
-    # return df
+    ## Change Date, Time columns to proper column name after mySQL connection
+    '''Creates a HTML table of records in the dataframe passed as argument df '''
     return df[['Account Name','Country','State','City','Date','Time','IP Address',]].to_html()
 
     # PLOTLY TABLE VERSION

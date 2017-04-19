@@ -68,13 +68,13 @@ def query():
     'end_time': request.args['end_time']
     }
     subsetdf = filter_df(df,
-                radius = url_args['radius'],
-                latitude = url_args['latitude'],
-                longitude = url_args['longitude'],
-                start_date = url_args['start_date'],
-                end_date = url_args['end_date'],
-                start_time = url_args['start_time'],
-                end_time = url_args['end_time'])
+        radius = url_args['radius'],
+        latitude = url_args['latitude'],
+        longitude = url_args['longitude'],
+        start_date = url_args['start_date'],
+        end_date = url_args['end_date'],
+        start_time = url_args['start_time'],
+        end_time = url_args['end_time'])
     return render_template("index.html",
         account_distribution = dash.AccountDistribution(subsetdf),
         location_distribution = dash.LocationDistribution(subsetdf),
