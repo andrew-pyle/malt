@@ -13,6 +13,11 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 
+## Geocoding Library from OpenStreeMaps
+from geopy.geocoders import Nominatim
+#geocoder PyPi library
+import geocoder
+
 try:
     import argparse
     flags = argparse.ArgumentParser(parents=[tools.argparser]).parse_args()
@@ -154,6 +159,10 @@ def main():
     Creates a Gmail API service object and outputs a list of label names
     of the user's Gmail account.
     """
+
+    # Create a Nominatim instance (OpenStreeMaps geocoding service)
+    ##geolocator = Nominatim()
+
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('gmail', 'v1', http=http)
@@ -162,10 +171,15 @@ def main():
     labels = results.get('labels', [])
 
     allMessages = ListMessagesMatchingQuery(service, 'me', '')
+    allRecords = [] # List for all email records (list of lists)
     for mess in allMessages:
         messageID = mess['id']
-        print (getAttributes(str(GetMimeMessage(service, 'me', messageID))))
+        #print (getAttributes(str(GetMimeMessage(service, 'me', messageID))))
+        record = getAttributes(str(GetMimeMessage(service, 'me', messageID))) # [UserID, IP Address, Location, Time]
+        record.append(geocoder.maxmind(record[2].city) # add city from IP - geocoder library
 
+
+        #allRecords.append(record)
 
 
     if not labels:
