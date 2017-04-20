@@ -1,0 +1,224 @@
+<!--Adapted from template provided by Keen IO (https://keen.io) © Keen IO 2014 MIT License.
+
+The MIT License (MIT)
+
+Copyright (c) 2014 Keen IO
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.-->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MALT: Dashboard</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+  <link rel="stylesheet" type="text/css" href="../static/assets/lib/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../static/assets/css/keen-dashboards.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+  <link rel="stylesheet" href="../static/assets/css/custom.css" />
+  <link rel="icon" href="../static/assets/img/favicon.ico">
+  <script type="text/javascript" src="../static/assets/lib/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="../static/assets/js/plotly.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+  <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+</head>
+<body class="application">
+
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand">
+          <span class="glyphicon glyphicon-map-marker"></span>
+        </a>
+        <a class="navbar-brand">MALT</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <div class="nav navbar-nav navbar-left">
+          <form action="/query">
+            <div class="filters">
+              Radius (km)
+              <input name="radius" type="number" id="radius" class="form-control" value={{ filter_vals['radius'] }}>
+            </div>
+            <div class="filters">
+              Latitude
+              <input name="latitude" type="number" step="any" id="latitude" class="form-control" value={{ filter_vals['latitude'] }}>
+            </div>
+            <div class="filters">
+              Longitude
+              <input name="longitude" type="number" step="any" id="longitude" class="form-control" placeholder="" value={{ filter_vals['longitude'] }}>
+            </div>
+            <div class="filters" id="datefilter">
+              Start Date
+              <input name="start_date" type="date" id="date-start" class="form-control" placeholder="mm/dd/yyyy" value={{ filter_vals['start_date'] }}>
+            </div>
+            <div class="filters" id="datefilter">
+              End Date
+              <input name="end_date" type="date" id="date-end" class="form-control" placeholder="mm/dd/yyyy" value={{ filter_vals['end_date'] }}>
+            </div>
+            <div class="filters" id="timefilter">
+              Start Time
+              <input name="start_time" type="time" id="time-start" class="form-control" placeholder="hh:mm ss" value={{ filter_vals['start_time'] }}>
+            </div>
+            <div class="filters" id="timefilter">
+              End Time
+              <input name="end_time" type="time" id="time-end" class="form-control" placeholder="hh:mm ss" value={{ filter_vals['end_time'] }}>
+            </div>
+            <div class="filters">
+              <input type="submit" id="refresh" class="btn btn-primary btn-block" value="Refresh"></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6" id="map-panel">
+        <div class="chart-wrapper" id="map-wrapper">
+          <div class="chart-title">
+            Malicious Login Alert Locations
+          </div>
+          <div id="mapid" class="chart-stage">
+            <script>
+              // Initialize Map: ([latitude, longitude], zoom-level)
+              var map = L.map("mapid").setView([34.725237, -92.340925], 13);
+
+              // Load Stamen Tile Layer
+              /**************
+               * Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
+               * See http://maps.stamen.com
+               * StamenTileLayer arguments:
+               *  "toner"
+               *  "toner-lite"
+               *  "terrain"
+               *  "watercolor"
+               **************/
+              var layer = new L.StamenTileLayer("toner-lite");
+              map.addLayer(layer);
+
+              // Add Markers from dataframe in memory in Flask
+              //   Jinja2 variable iterrows passes an iterable pandas dataframe object for the Jinja2
+              //   template language to iterate over
+              {% for index, row in iterrows %} // Iterate over all rows in dataframe matching query. If query blank, every row is passed in "iterrows"
+                var marker = L.marker({{[row['Latitude'], row['Longitude']]}}).addTo(map)
+                // Format the Popup with HTML!!
+                .bindPopup( "{{row['Account Name']}}, {{row['Date']}}, {{row['City']}}, {{row['State']}}, {{row['IP Address']}}"); // Assign values from dataframe row to its popup
+              {% endfor %}
+
+              // Add Search radius circle if radius, latitude, and longitude are submitted on the form
+              {% if filter_vals['radius'] != '' and filter_vals['latitude'] != '' and filter_vals['longitude'] != '' %}
+                var circle = L.circle([{{filter_vals['latitude']}},{{filter_vals['longitude']}}], {
+                  color: 'red',
+                  fillColor: '#f03',
+                  fillOpacity: 0.25,
+                  radius: ({{filter_vals['radius']}} * 1000)
+                }).addTo(map);
+                map.fitBounds(circle.getBounds()); // Set map view to the search radius
+              {% endif %}
+            </script>
+          </div>
+          <div class="chart-notes">
+            {{ filter_vals }}<!-- Click a marker to see the associated alert information. -->
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6" id="charts-panel">
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            Location Distribution
+          </div>
+          <div class="chart-stage">
+            {{location_distribution | safe}}
+          </div>
+          <div class="chart-notes">
+            Hover the mouse over a bar to see its location and count.
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            IP Addreses Used Today
+          </div>
+          <div class="chart-stage">
+            {{ip_address_distribution_today | safe}}
+          </div>
+          <div class="chart-notes">
+            Hover the mouse over a bar to see its IP Address and count.
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            Account Distribution
+          </div>
+          <div class="chart-stage">
+            <div>
+              {{account_distribution | safe}}
+            </div>
+          </div>
+          <div class="chart-notes">
+            Hover the mouse over a bar to see its account name and count.
+          </div>
+        </div>
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            Time-of-Day Distribution
+          </div>
+          <div class="chart-stage">
+            <!-- <img data-src="holder.js/100%x120/white"> -->
+            {{time_of_day_distribtion | safe}}
+          </div>
+          <div class="chart-notes">
+            Hover the mouse over a bar to see its time and count.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <div class="chart-wrapper">
+          <div class="chart-title">
+            Record Table
+          </div>
+          <div class="chart-stage">
+              {{data_table | safe}}
+          </div>
+          <div class="chart-notes">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="../static/assets/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../static/assets/lib/holderjs/holder.js"></script>
+  <script>
+    Holder.add_theme("white", { background:"#fff", foreground:"#a7a7a7", size:10 });
+  </script>
+  <script type="text/javascript" src="../static/assets/lib/keen-js/dist/keen.min.js"></script>
+  <!-- Put into this .html file -->
+  <!-- <script type='text/javascript' src='../static/assets/js/leafletMapCustom.js'></script> -->
+
+</body>
+</html>

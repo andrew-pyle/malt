@@ -1,0 +1,78 @@
+.filters {
+  font-size: 14px;
+  color: #fbfbfb;
+  text-decoration: none;
+  padding: 10px 5px;
+  width: 100px;
+  float: left;
+}
+
+#datefilter {
+  width: 195px;
+}
+
+#timefilter {
+  width: 140px
+}
+
+#refresh {
+  margin-top: 20px;
+}
+
+#map-panel {
+  position: fixed;
+  height: 85%;
+}
+
+#map-wrapper {
+  height: inherit;
+}
+
+#mapid {
+  height
+  border-right: 1px solid #d7d7d7;
+  overflow: hidden;
+  height: inherit;
+}
+
+#charts-panel {
+  left: 50%;
+}
+
+table.dataframe {
+  width: 100%;
+  border: none;
+  text-align:left;
+  padding: 10px;
+}
+
+thead th{
+  border: none;
+  background-color: #3D4A57;
+  color: white;
+  padding: 5px;
+}
+
+tbody {
+  border: none
+  padding: 8px;
+}
+th {
+  border: none;
+  padding: 5px;
+}
+tr:nth-child(odd) { background-color: #d9d9d9; }
+tr:nth-child(even) { background-color: #ffffff; }
+tr:hover { background-color: #ffff99; }
+
+td {
+  border: none;
+  padding: 8px;
+}
+
+
+
+/*.chart-stage {
+  height: 400px;
+  overflow: scroll;
+}*/
