@@ -4,6 +4,8 @@ import httplib2
 import os
 import base64
 import email
+import geopy
+import geocoder
 from apiclient import errors
 
 
@@ -14,9 +16,7 @@ from oauth2client import tools
 from oauth2client.file import Storage
 
 ## Geocoding Library from OpenStreeMaps
-from geopy.geocoders import Nominatim
 #geocoder PyPi library
-import geocoder
 
 try:
     import argparse
@@ -30,6 +30,26 @@ SCOPES = 'https://www.googleapis.com/auth/gmail.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Gmail API Python Quickstart'
 
+
+def ListLabels(service, user_id):
+  """Get a list all labels in the user's mailbox.
+
+  Args:
+    service: Authorized Gmail API service instance.
+    user_id: User's email address. The special value "me"
+    can be used to indicate the authenticated user.
+
+  Returns:
+    A list all Labels in the user's mailbox.
+  """
+  try:
+    response = service.users().labels().list(userId=user_id).execute()
+    labels = response['labels']
+    for label in labels:
+      print ('Label id: %s - Label name: %s' % (label['id'], label['name']))
+    return labels
+  except errors.HttpError as error:
+    print ('An error occurred: %s' % error)
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -153,6 +173,42 @@ def getAttributes(data):
 
 
 
+def ModifyMessage(service, user_id, msg_id, msg_labels):
+  """Modify the Labels on the given Message.
+
+  Args:
+    service: Authorized Gmail API service instance.
+    user_id: User's email address. The special value "me"
+    can be used to indicate the authenticated user.
+    msg_id: The id of the message required.
+    msg_labels: The change in labels.
+
+  Returns:
+    Modified message, containing updated labelIds, id and threadId.
+  """
+  try:
+    message = service.users().messages().modify(userId=user_id, id=msg_id,
+                                                body=msg_labels).execute()
+
+    label_ids = message['labelIds']
+
+    print ('Message ID: %s - With Label IDs %s' % (msg_id, label_ids))
+    return message
+  except errors.HttpError as error:
+    print ('An error occurred: %s' % error)
+
+
+def CreateMsgLabels():
+  """Create object to update labels.
+
+  Returns:
+    A label update object.
+  """
+  return {'removeLabelIds': [], 'addLabelIds': ['Label_1']}
+
+
+
+
 def main():
     """Shows basic usage of the Gmail API.
 
@@ -172,23 +228,25 @@ def main():
 
     allMessages = ListMessagesMatchingQuery(service, 'me', '')
     allRecords = [] # List for all email records (list of lists)
+
+    from geopy.geocoders import Nominatim
+    geolocator = Nominatim()
+
+    ListLabels(service, 'me')
+
+    messageLabels = CreateMsgLabels()
+
     for mess in allMessages:
         messageID = mess['id']
-        #print (getAttributes(str(GetMimeMessage(service, 'me', messageID))))
-        record = getAttributes(str(GetMimeMessage(service, 'me', messageID))) # [UserID, IP Address, Location, Time]
-        record.append(geocoder.maxmind(record[2].city) # add city from IP - geocoder library
 
+        ModifyMessage(service, 'me', messageID, messageLabels)
+        #print (getAttributes(str(GetMimeMessage(service, 'me', messageID))))
+        record = getAttributes(str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
+        if len(record) == 4:
+            #record.append(geocoder.google(record[2]).latlng)# add city from IP - geocoder library
+            print(record)
 
         #allRecords.append(record)
-
-
-    if not labels:
-        print('No labels found.')
-    else:
-      print('Labels:')
-      for label in labels:
-        print(label['name'])
-
 
 
 
