@@ -80,7 +80,7 @@ DataFrame column names expected:
 #  '''
 
 import pandas as pd
-import MySQLdb
+import MySQLdb   #pip3 install mysql-client
 import sys
 
 
