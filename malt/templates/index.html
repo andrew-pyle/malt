@@ -36,6 +36,7 @@ SOFTWARE.-->
   <script type="text/javascript" src="../static/assets/js/plotly.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
   <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+  <script type="text/javascript" src="../static/assets/js/custom.js"></script>
 </head>
 <body class="application">
 
@@ -55,7 +56,7 @@ SOFTWARE.-->
       </div>
       <div class="navbar-collapse collapse">
         <div class="nav navbar-nav navbar-left">
-          <form action="/query">
+          <form name="filter" action="/query" onsubmit="return validateLocationFilter();">
             <div class="filters">
               Radius (km)
               <input name="radius" type="number" id="radius" class="form-control" value={{ filter_vals['radius'] }}>
