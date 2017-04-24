@@ -39,8 +39,8 @@ df.index += 1
 def index():
     url_args = {
     'radius': '',
-    'latitude': '',
-    'longitude': '',
+    'latitude': '34.7241',
+    'longitude': '-92.3389',
     'start_date': '',
     'end_date': '',
     'start_time': '',
