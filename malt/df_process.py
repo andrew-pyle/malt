@@ -13,6 +13,7 @@ DataFrame column names expected:
  - df['Longitude']
  '''
 
+import pandas as pd
 import MySQLdb   #pip3 install mysqlclient
 import sys
 
@@ -59,6 +60,8 @@ def create_df(hostname='localhost', user='', password='', database=''):
     c = conn.cursor()
 
     df = pd.read_sql('SELECT * from emailRecords', con = conn)
+    print(df.dtypes)
+
     c.close()
     conn.close()
 
