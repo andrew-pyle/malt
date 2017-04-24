@@ -124,8 +124,6 @@ def create_df():
 #     return timestamp
 
 
->>>>>>> Stashed changes
-
 # Pandas DataFrame Query
 def filter_df(df, radius='', latitude='', longitude='',
               start_date='', end_date='', start_time='', end_time=''):
@@ -147,8 +145,4 @@ def filter_df(df, radius='', latitude='', longitude='',
     if end_time != '':
         df = df[df['Time'] <= pd.to_datetime(end_time)]
 
-<<<<<<< Updated upstream
     return df
-=======
-    return df
->>>>>>> Stashed changes
