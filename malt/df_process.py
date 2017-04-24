@@ -35,7 +35,7 @@ def store_emails(email_list, hostname='localhost', user='', password='', databas
     c = conn.cursor()
 
     #create a table if it doesn't exist named emailRecords
-    c.execute("CREATE TABLE IF NOT EXISTS emailRecords(`Account Name` varchar(15), Latitude float(20), Longitude float(20), Datetime datetime, `IP Address` varchar(40), `City` varchar(20), `State` varchar(20), `Country` varchar(25)")
+    c.execute("CREATE TABLE IF NOT EXISTS emailRecords(`Account Name` varchar(15), Latitude float(20), Longitude float(20), Datetime datetime, `IP Address` varchar(40), `City` varchar(20), `State` varchar(20), `Country` varchar(25))")
 
     #here is the insertion and commit row by row of data records
     for col in email_list:
