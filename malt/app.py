@@ -29,8 +29,8 @@ app = Flask(__name__)
 
 
 ## Import flat JSON file with data sample for development
-data = "data.json"
-df = create_df(data)
+#data = "data.json"
+df = create_df()
 df.index += 1
 
 
