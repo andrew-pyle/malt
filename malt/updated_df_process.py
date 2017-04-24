@@ -98,15 +98,15 @@ c = conn.cursor()
 
 #two data records
 
-schema = [['jinzh','34.7464809','92.2895947', '2017-01-08 20:52:47','73.133.196.202','P-town','Oregon','USA', '10'],['Dummy Data', '92.2895947', '34.7464809','2016-01-08 20:52:47', '2602:30a:c071:a260:6c0d:5d86:be0f:a774', 'San Jose', 'California', 'USA', '8']]
+schema = [['jinzh','34.7464809','92.2895947', '2017-01-08 20:52:47','73.133.196.202','P-town','Oregon','USA'],['Dummy Data', '92.2895947', '34.7464809','2016-01-08 20:52:47', '2602:30a:c071:a260:6c0d:5d86:be0f:a774', 'San Jose', 'California', 'USA']]
 
 #create a table named T7
-c.execute("CREATE TABLE IF NOT EXISTS T7(`Account Name` varchar(15), Latitude float(20), longitude float(20), Datetime datetime, `IP Address` varchar(40), `City` varchar(20), `State` varchar(20), `Country` varchar(25), Hour varchar(2)) ")
+c.execute("CREATE TABLE IF NOT EXISTS T7(`Account Name` varchar(15), Latitude float(20), longitude float(20), Datetime datetime, `IP Address` varchar(40), `City` varchar(20), `State` varchar(20), `Country` varchar(25)) ")
 
 
 #here is the insertion and commit row by row of data records
 for col in schema:
-    c.execute("INSERT INTO T7( `Account Name`, Latitude, Longitude, Datetime, `IP Address`, City, State, Country, Hour) VALUES (%s, %s, %s, %s, %s,%s, %s, %s, %s )", (col[0], col[1], col[2], col[3], col[4], col[5], col[6], col[7], col[8]))
+    c.execute("INSERT INTO T7( `Account Name`, Latitude, Longitude, Datetime, `IP Address`, City, State, Country) VALUES (%s, %s, %s, %s, %s,%s, %s, %s )", (col[0], col[1], col[2], col[3], col[4], col[5], col[6], col[7]))
     conn.commit()
 
 # Pandas DataFrame Generation
