@@ -1,3 +1,17 @@
+'''
+Gmail API Connection module
+
+The get_emails() function is specialized for connecting to the MALT gmail inbox repository. It
+returns a list of lists with all unread email records in the format:
+[UserID, IP Address, Date, City, State, Country, Latitude, Longitude]
+
+The Gmail API requires a user to be authenticated with the client_secret.json file.
+The get_credentials() function looks for the client_secret.json file in the location set in
+the CLIENT_SECRET_FILE variable. It creates ~/.credentials/gmail-python-quickstart.json, which
+perpetually authorizes the user. If this module returns a 403 Access Denied error, delete the
+gmail-python-quickstart.json file from the user's home folder and let this module create it again.
+'''
+
 
 from __future__ import print_function
 import httplib2
@@ -326,7 +340,7 @@ def get_emails():
             except:
                 # ISSUE: leaves None in some fields when it passes to next iteration.
                 pass
-            print(record) # for development
+            #print(record) # for development
             allRecords.append(record) # Append record [UserID, IP Address, Date, City, State, Country, Latitude, Longitude]
 
         # paging the process in order to get a stable connnection
