@@ -1,7 +1,8 @@
 # run every 2 hrs
 
 import pandas as pd
-from df_process import get_emails, store_emails
+from df_process import store_emails
+from quickstart import get_emails
 
 # Set configuration here for MySQL server
 ***REMOVED***

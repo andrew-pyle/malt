@@ -303,19 +303,31 @@ def get_emails():
             str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
         if len(record) == 4:
             try:
+                # Datetime
                 tm = record[3]
                 record.pop() # remove verbose string Time field
                 # Add parsed YYY-MM-DD HH:MM:SS (24h time)
                 parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
                 record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
+
+                # Google Geocode query
+                geo = geocoder.google(record[2])
+                record.append(geo.city)
+                record.append(geo.state)
+                record.append(geo.country)
+                if len(record) == 7: # ensure 3 fields were added before removing old location
+                    record.pop(2)
+                record.append(geo.lat)
+                record.append(geo.lng)
+
                 # query Google geocoding API with string Location field
-                record.append(geocoder.google(record[2]).lat)
-                record.append(geocoder.google(record[2]).lng)
+                # record.append(geocoder.google(record[2]).lat)
+                # record.append(geocoder.google(record[2]).lng)
             except:
                 # ISSUE: leaves None in some fields when it passes to next iteration.
-                break
-            #print(record) # for development
-            allRecords.append(record) # Append record to list of lists with all records read this run
+                pass
+            print(record) # for development
+            allRecords.append(record) # Append record [UserID, IP Address, Date, City, State, Country, Latitude, Longitude]
 
         # paging the process in order to get a stable connnection
         # else:
