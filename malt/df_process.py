@@ -37,13 +37,13 @@ def store_emails(email_list, hostname='localhost', user='', password='', databas
 
     #create a table if it doesn't exist named emailRecords
     c.execute("CREATE TABLE IF NOT EXISTS emailRecords(`Account Name` varchar(15), Latitude float(20), Longitude float(20), Datetime datetime, `IP Address` varchar(40), `City` varchar(20), `State` varchar(20), `Country` varchar(25))")
-    #c.execute("Delete from emailRecords WHERE Datetime < NOW() - INTERVAL 90 DAY")
+    c.execute("Delete from emailRecords WHERE Datetime < NOW() - INTERVAL 90 DAY")
     #here is the insertion and commit row by row of data records
     for col in email_list:
         if col[1] != '':
               c.execute("INSERT INTO emailRecords(`Account Name`, Latitude, Longitude, Datetime, `IP Address`, City, State, Country) VALUES (%s, %s, %s, %s, %s,%s, %s, %s)", (col[0], col[1], col[2], col[3], col[4], col[5], col[6], col[7]))
               conn.commit()
-
+    conn.close()
 
 ### Pandas DataFrame Generation
 def create_df(hostname='localhost', user='', password='', database=''):
