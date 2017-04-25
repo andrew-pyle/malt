@@ -6,6 +6,10 @@ import base64
 import email
 import geopy
 import geocoder
+import time
+
+import datetime
+
 from apiclient import errors
 
 
@@ -26,7 +30,11 @@ except ImportError:
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/gmail-python-quickstart.json
-SCOPES = 'https://www.googleapis.com/auth/gmail.readonly'
+SCOPES = [
+    'https://mail.google.com/',
+    'https://www.googleapis.com/auth/gmail.modify',
+    # Add other requested scopes.
+]
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Gmail API Python Quickstart'
 
@@ -204,12 +212,43 @@ def CreateMsgLabels():
   Returns:
     A label update object.
   """
-  return {'removeLabelIds': [], 'addLabelIds': ['Label_1']}
+  return {'removeLabelIds': ['UNREAD'], 'addLabelIds': ['Label_1']}
 
 
+def ListMessagesWithLabels(service, user_id, label_ids=[]):
+  """List all Messages of the user's mailbox with label_ids applied.
+
+  Args:
+    service: Authorized Gmail API service instance.
+    user_id: User's email address. The special value "me"
+    can be used to indicate the authenticated user.
+    label_ids: Only return Messages with these labelIds applied.
+
+  Returns:
+    List of Messages that have all required Labels applied. Note that the
+    returned list contains Message IDs, you must use get with the
+    appropriate id to get the details of a Message.
+  """
+  try:
+    response = service.users().messages().list(userId=user_id,
+                                               labelIds=label_ids).execute()
+    messages = []
+    if 'messages' in response:
+      messages.extend(response['messages'])
+
+    while 'nextPageToken' in response:
+      page_token = response['nextPageToken']
+      response = service.users().messages().list(userId=user_id,
+                                                 labelIds=label_ids,
+                                                 pageToken=page_token).execute()
+      messages.extend(response['messages'])
+
+    return messages
+  except errors.HttpError as error:
+    print( 'An error occurred: %s' % error)
 
 
-def main():
+def get_emails():
     """Shows basic usage of the Gmail API.
 
     Creates a Gmail API service object and outputs a list of label names
@@ -226,7 +265,7 @@ def main():
     results = service.users().labels().list(userId='me').execute()
     labels = results.get('labels', [])
 
-    allMessages = ListMessagesMatchingQuery(service, 'me', '')
+    allMessages = ListMessagesWithLabels(service, 'me', ['UNREAD'])
     allRecords = [] # List for all email records (list of lists)
 
     from geopy.geocoders import Nominatim
@@ -236,19 +275,45 @@ def main():
 
     messageLabels = CreateMsgLabels()
 
-    for mess in allMessages:
-        messageID = mess['id']
+    # for mess in allMessages:
+    #     messageID = mess['id']
+    #
+    #     ModifyMessage(service, 'me', messageID, messageLabels)
+    #     #print (getAttributes(str(GetMimeMessage(service, 'me', messageID))))
+    #     record = getAttributes(str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
+    #     if len(record) == 4:
+    #
+    #
+    #         #record.append(geocoder.google(record[2]).latlng)# add city from IP - geocoder library
+    #         print(record)
+    #
+    #     #allRecords.append(record)
 
-        ModifyMessage(service, 'me', messageID, messageLabels)
-        #print (getAttributes(str(GetMimeMessage(service, 'me', messageID))))
-        record = getAttributes(str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
-        if len(record) == 4:
-            #record.append(geocoder.google(record[2]).latlng)# add city from IP - geocoder library
-            print(record)
+    while len(allMessages) != 0:
+        indexLimit = 0
+        time.sleep(5)
+        for indexLimit in range(0,49):
+            mess = allMessages[indexLimit]
+            if len(allMessages) == 0:
+                break
+            else:
+                messageID = mess['id']
+                ModifyMessage(service, 'me', messageID, messageLabels)
+                record = getAttributes(str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
+                if len(record) ==4:
+                    try:
+                        tm = record[3]
+                        record.pop()
+                        parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
+                        record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
+                        allMessages.pop(0)
+                        record.append(geocoder.google(record[2]).lat)
+                        record.append(geocoder.google(record[2]).lng)
+                    except:
+                        pass
+                if len(record) == 6:
+                    allRecords.append(record)
+    return allRecords
 
-        #allRecords.append(record)
-
-
-
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
