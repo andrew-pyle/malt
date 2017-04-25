@@ -59,8 +59,6 @@ def AccountDistribution(df):
     ''' Plotly API call. Creates a histogram of accounts, ordered from largest to smallest. Plotly does not have the
     capability to order bars in a histogram, so a new dataframe with the proper order is created
     and a Bar Chart is used. '''
-    # Change IP Address column to account column - sample data had accounts redacted: DONE
-
     accountSeries = df["Account Name"].value_counts()
     accountFrame = pd.DataFrame({'accountName' : accountSeries.index, 'login count' : accountSeries.values})
     trace = [
@@ -111,7 +109,6 @@ def AccountDistribution(df):
 
 
 def TimeOfDayDistribution(df):
-    ## Change Time column to proper column name after mySQL connection
     ''' Plotly API call. Creates a histogram of all alerts by hour-of-day, ordered from 00:00 to 24:00.
     Plotly does not have the capability to order bars in a histogram, so a new dataframe with the
     proper order is created and a Bar Chart is used. Additionally, custom tick marks are used to
@@ -125,7 +122,7 @@ def TimeOfDayDistribution(df):
         hours_format_list.append('{}:00'.format(x))
 
 
-    timeSeries = df["Time"].dt.hour.value_counts()
+    timeSeries = df["Datetime"].dt.hour.value_counts()
     timeFrame = pd.DataFrame({'Time':timeSeries.index, 'Count':timeSeries.values})
     trace = [
         go.Bar(
@@ -175,13 +172,12 @@ def TimeOfDayDistribution(df):
         )
 
 def IPAddressDistributionToday(df):
-    ## Change Date column to proper column name after mySQL connection
     ''' Plotly API call. Creates a histogram of all alerts by hour-of-day, ordered from 00:00 to 24:00.
     Plotly does not have the capability to order bars in a histogram, so a new dataframe with the
     proper order is created and a Bar Chart is used. Additionally, custom tick marks are used to
     show each bin as "xx:xx" rather than as a continuous variable. '''
 
-    ipSeries = df.loc[df.Date >= pd.to_datetime('today')]['IP Address'].value_counts()
+    ipSeries = df.loc[df.Datetime >= pd.to_datetime('today')]['IP Address'].value_counts()
     ipFrame = pd.DataFrame({'ipAddress' : ipSeries.index, 'login count' : ipSeries.values})
     trace = [
         go.Bar(
@@ -231,9 +227,8 @@ def IPAddressDistributionToday(df):
 
 
 def DataTable(df):
-    ## Change Date, Time columns to proper column name after mySQL connection
     '''Creates a HTML table of records in the dataframe passed as argument df '''
-    return df[['Account Name','Country','State','City','Date','Time','IP Address',]].to_html()
+    return df[['Account Name','Latitude','Longitude', 'City', 'State','Country','Datetime','IP Address']].to_html()
 
     # PLOTLY TABLE VERSION
     # dfTable = df[['Account Name','Country','State','City','Date','Time','IP Address',]]
