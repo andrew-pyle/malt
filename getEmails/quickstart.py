@@ -278,7 +278,7 @@ def get_emails():
 
     ListLabels(service, 'me')
 
-    messageLabels = CreateMsgLabels()
+    messageLabels = CreateMsgLabels() # Removes 
 
     # for mess in allMessages:
     #     messageID = mess['id']
@@ -295,24 +295,28 @@ def get_emails():
     #     #allRecords.append(record)
 
     while len(allMessages) != 0:
-        mess = allMessages[0]
+        mess = allMessages[0] # store and remove an email record from allMessages
         allMessages.pop(0)
         messageID = mess['id']
-        ModifyMessage(service, 'me', messageID, messageLabels)
+        ModifyMessage(service, 'me', messageID, messageLabels) # Change label from ['UNREAD'] to ['Label_1']
         record = getAttributes(
             str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
         if len(record) == 4:
             try:
                 tm = record[3]
-                record.pop()
+                record.pop() # remove verbose string Time field
+                # Add parsed YYY-MM-DD HH:MM:SS (24h time)
                 parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
                 record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
+                # query Google geocoding API with string Location field
                 record.append(geocoder.google(record[2]).lat)
                 record.append(geocoder.google(record[2]).lng)
             except:
+                # ISSUE: leaves None in some fields when it passes to next iteration.
                 break
             print(record)
-            allRecords.append(record)
+            allRecords.append(record) # Append record to list of lists with all records read this run
+            
         # paging the process in order to get a stable connnection
         # else:
         #     for indexLimit in range(0,49):
