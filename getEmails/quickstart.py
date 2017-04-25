@@ -214,6 +214,14 @@ def CreateMsgLabels():
   """
   return {'removeLabelIds': ['UNREAD'], 'addLabelIds': ['Label_1']}
 
+def CreateUnreadMsgLabels():
+  """Create object to update labels.
+
+  Returns:
+    A label update object.
+  """
+  return {'removeLabelIds': ['Label_1'], 'addLabelIds': ['UNREAD']}
+
 
 def ListMessagesWithLabels(service, user_id, label_ids=[]):
   """List all Messages of the user's mailbox with label_ids applied.
@@ -248,7 +256,7 @@ def ListMessagesWithLabels(service, user_id, label_ids=[]):
     print( 'An error occurred: %s' % error)
 
 
-def main():
+def get_emails():
     """Shows basic usage of the Gmail API.
 
     Creates a Gmail API service object and outputs a list of label names
@@ -267,9 +275,6 @@ def main():
 
     allMessages = ListMessagesWithLabels(service, 'me', ['UNREAD'])
     allRecords = [] # List for all email records (list of lists)
-
-    from geopy.geocoders import Nominatim
-    geolocator = Nominatim()
 
     ListLabels(service, 'me')
 
@@ -290,50 +295,68 @@ def main():
     #     #allRecords.append(record)
 
     while len(allMessages) != 0:
-        indexLimit = 0
-        time.sleep(5)
-        if len(allMessages)< 49:
-            mess = allMessages[indexLimit]
-            messageID = mess['id']
-            ModifyMessage(service, 'me', messageID, messageLabels)
-            record = getAttributes(
-                str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
-            if len(record) == 4:
-                try:
-                    tm = record[3]
-                    record.pop()
-                    parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
-                    record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
-                    allMessages.pop(0)
-                    record.append(geocoder.google(record[2]).lat)
-                    record.append(geocoder.google(record[2]).lng)
-                except:
-                    pass
-            if len(record) == 6:
-                allRecords.append(record)
-        else:
-            for indexLimit in range(0,49):
-                if len(allMessages) == 0:
-                    break
-                else:
-                    mess = allMessages[indexLimit]
-                    messageID = mess['id']
-                    ModifyMessage(service, 'me', messageID, messageLabels)
-                    record = getAttributes(str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
-                    if len(record) ==4:
-                        try:
-                            tm = record[3]
-                            record.pop()
-                            parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
-                            record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
-                            allMessages.pop(0)
-                            record.append(geocoder.google(record[2]).lat)
-                            record.append(geocoder.google(record[2]).lng)
-                        except:
-                            pass
-                    if len(record) == 6:
-                        allRecords.append(record)
+        mess = allMessages[0]
+        allMessages.pop(0)
+        messageID = mess['id']
+        ModifyMessage(service, 'me', messageID, messageLabels)
+        record = getAttributes(
+            str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
+        if len(record) == 4:
+            try:
+                tm = record[3]
+                record.pop()
+                parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
+                record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
+                record.append(geocoder.google(record[2]).lat)
+                record.append(geocoder.google(record[2]).lng)
+            except:
+                break
+            print(record)
+            allRecords.append(record)
+        # paging the process in order to get a stable connnection
+        # else:
+        #     for indexLimit in range(0,49):
+        #         if len(allMessages) == 0:
+        #             break
+        #         else:
+        #             mess = allMessages[indexLimit]
+        #             messageID = mess['id']
+        #             ModifyMessage(service, 'me', messageID, messageLabels)
+        #             record = getAttributes(str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
+        #             if len(record) ==4:
+        #                 try:
+        #                     tm = record[3]
+        #                     record.pop()
+        #                     parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
+        #                     record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
+        #                     allMessages.pop(0)
+        #                     record.append(geocoder.google(record[2]).lat)
+        #                     record.append(geocoder.google(record[2]).lng)
+        #                 except:
+        #                     pass
+        #             if len(record) == 6:
+        #                 allRecords.append(record)
 
-    print(allRecords)
+    return allRecords
+
+def unreadAllEmails():
+    credentials = get_credentials()
+    http = credentials.authorize(httplib2.Http())
+    service = discovery.build('gmail', 'v1', http=http)
+
+    results = service.users().labels().list(userId='me').execute()
+    labels = results.get('labels', [])
+    allMessages = ListMessagesWithLabels(service, 'me', ['INBOX'])
+    ListLabels(service, 'me')
+
+    messageLabels = CreateUnreadMsgLabels()
+
+
+    for mess in allMessages:
+        messageID = mess['id']
+        ModifyMessage(service, 'me', messageID, messageLabels)
+
+def main():
+    get_emails()
 if __name__ == '__main__':
     main()
