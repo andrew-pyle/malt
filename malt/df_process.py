@@ -40,7 +40,7 @@ def store_emails(email_list, hostname='localhost', user='', password='', databas
     c.execute("Delete from emailRecords WHERE Datetime < NOW() - INTERVAL 90 DAY")
     #here is the insertion and commit row by row of data records
     for col in email_list:
-        if col[1] != '':
+        if '' not in col:
               c.execute("INSERT INTO emailRecords(`Account Name`, Latitude, Longitude, Datetime, `IP Address`, City, State, Country) VALUES (%s, %s, %s, %s, %s,%s, %s, %s)", (col[0], col[1], col[2], col[3], col[4], col[5], col[6], col[7]))
               conn.commit()
     conn.close()
