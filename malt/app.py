@@ -27,10 +27,16 @@ from df_process import filter_df
 
 app = Flask(__name__)
 
+# Set configuration here for MySQL server (also in update_records.py!)
+***REMOVED***
+***REMOVED***
+***REMOVED***
+***REMOVED***
+
 
 ## Import flat JSON file with data sample for development
-data = "data.json"
-df = create_df(data)
+#data = "data.json"
+df = create_df(hostname=HOSTNAME, user=USER, password=PASSWORD, database=DATABASE)
 df.index += 1
 
 
