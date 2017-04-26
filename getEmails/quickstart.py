@@ -294,11 +294,10 @@ def get_emails():
     #
     #     #allRecords.append(record)
 
-    while len(allMessages) != 0:
+    while len(allMessages) != 0 and len(allRecords)< 500 :
         mess = allMessages[0]
         allMessages.pop(0)
         messageID = mess['id']
-        ModifyMessage(service, 'me', messageID, messageLabels)
         record = getAttributes(
             str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
         if len(record) == 4:
@@ -311,8 +310,10 @@ def get_emails():
                 record.append(geocoder.google(record[2]).lng)
             except:
                 break
-            print(record)
-            allRecords.append(record)
+            if record[4] != None and record[5]!=None:
+                ModifyMessage(service, 'me', messageID, messageLabels)
+                print(record)
+                allRecords.append(record)
         # paging the process in order to get a stable connnection
         # else:
         #     for indexLimit in range(0,49):
@@ -357,6 +358,6 @@ def unreadAllEmails():
         ModifyMessage(service, 'me', messageID, messageLabels)
 
 def main():
-    get_emails()
+    pass
 if __name__ == '__main__':
     main()
