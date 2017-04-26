@@ -24,7 +24,8 @@ filterwarnings('ignore', category=MySQLdb.Warning) #This will proceed the progra
 def get_emails():
     # #before we get the data variable from Hanzhao, we insert the following records into database
     #two data records
-    email_list = [['jinzh','34.7464809','92.2895947', '2017-01-08 20:52:47','73.133.196.202','P-town','Oregon','USA'],['Dummy Data', '92.2895947', '34.7464809','2016-01-08 20:52:47', '2602:30a:c071:a260:6c0d:5d86:be0f:a774', 'San Jose', 'California', 'USA']]
+    email_list = [['Dummy Data', '92.2895947', '34.7464809','2017-03-08 20:52:47', '2602:30a:c071:a260:6c0d:5d86:be0f:a774', 'San Jose', 'California', 'USA'],['jinzh','34.7464809','92.2895947', '2017-03-08 20:52:47','73.133.196.202','P-town','Oregon','USA'],[
+    'Dummy Data', '', '15454.1','2017-03-08 20:52:47', '2602:30a:c071:a260:6c0d:5d86:be0f:a774', 'San Jose', 'California', 'USA']]
     return email_list
 
 
