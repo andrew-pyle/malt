@@ -278,7 +278,7 @@ def get_emails():
 
     ListLabels(service, 'me')
 
-    messageLabels = CreateMsgLabels()
+    messageLabels = CreateMsgLabels() # Removes
 
     # for mess in allMessages:
     #     messageID = mess['id']
@@ -303,12 +303,15 @@ def get_emails():
         if len(record) == 4:
             try:
                 tm = record[3]
-                record.pop()
+                record.pop() # remove verbose string Time field
+                # Add parsed YYY-MM-DD HH:MM:SS (24h time)
                 parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
                 record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
+                # query Google geocoding API with string Location field
                 record.append(geocoder.google(record[2]).lat)
                 record.append(geocoder.google(record[2]).lng)
             except:
+                # ISSUE: leaves None in some fields when it passes to next iteration.
                 break
             if record[4] != None and record[5]!=None:
                 ModifyMessage(service, 'me', messageID, messageLabels)
@@ -337,7 +340,7 @@ def get_emails():
         #                     pass
         #             if len(record) == 6:
         #                 allRecords.append(record)
-
+    print(allRecords)
     return allRecords
 
 def unreadAllEmails():
