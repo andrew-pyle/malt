@@ -16,6 +16,10 @@ DataFrame column names expected:
 import pandas as pd
 import MySQLdb   #pip3 install mysqlclient
 import sys
+from warnings import filterwarnings
+
+filterwarnings('ignore', category=MySQLdb.Warning) #This will proceed the program without warning getting in the way when creating the table.
+
 
 def get_emails():
     # #before we get the data variable from Hanzhao, we insert the following records into database
