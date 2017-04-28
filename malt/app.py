@@ -43,6 +43,9 @@ df.index += 1
 ## URL Routing
 @app.route("/")
 def index():
+    # Connect to MySQL and create Pandas df on page load
+    df = create_df(hostname=HOSTNAME, user=USER, password=PASSWORD, database=DATABASE)
+    df.index += 1
     url_args = {
     'radius': '',
     'latitude': '34.7241',
@@ -64,6 +67,9 @@ def index():
 
 @app.route("/query/")
 def query():
+    # Connect to MySQL and create Pandas df on page load
+    df = create_df(hostname=HOSTNAME, user=USER, password=PASSWORD, database=DATABASE)
+    df.index += 1
     url_args = {
     'radius': request.args['radius'],
     'latitude': request.args['latitude'],
