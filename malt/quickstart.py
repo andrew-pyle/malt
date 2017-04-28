@@ -281,9 +281,21 @@ def get_emails():
                 # Add parsed YYY-MM-DD HH:MM:SS (24h time)
                 parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
                 record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
-                # query Google geocoding API with string Location field
-                record.append(geocoder.google(record[2]).lat)
-                record.append(geocoder.google(record[2]).lng)
+                # Geocoder google geocode API call
+                geo = geocoder.google(record[2])
+                # Add geocoded attributes to record list [UserID, IP Address, Location, Parsed Time, City, State, Country]
+                record.append(geo.city)
+                record.append(geo.state)
+                record.append(geo.country)
+                if len(record) == 7: # check to see if record has all values before removing verbose Location field
+                    record.pop(2)
+                record.append(geo.lat) # append Lat/Long to record
+                record.append(geo.lng)
+                # record = [UserID, IP Address, Parsed Time, City, State, Country, Latitude, Longitude]
+
+                # # query Google geocoding API with string Location field
+                # record.append(geocoder.google(record[2]).lat)
+                # record.append(geocoder.google(record[2]).lng)
             except:
                 # ISSUE: leaves None in some fields when it passes to next iteration.
                 break
