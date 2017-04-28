@@ -294,11 +294,10 @@ def get_emails():
     #
     #     #allRecords.append(record)
 
-    while len(allMessages) != 0:
-        mess = allMessages[0] # store and remove an email record from allMessages
+    while len(allMessages) != 0 and len(allRecords)< 500 :
+        mess = allMessages[0]
         allMessages.pop(0)
         messageID = mess['id']
-        ModifyMessage(service, 'me', messageID, messageLabels) # Change label from ['UNREAD'] to ['Label_1']
         record = getAttributes(
             str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
         if len(record) == 4:
@@ -314,9 +313,10 @@ def get_emails():
             except:
                 # ISSUE: leaves None in some fields when it passes to next iteration.
                 break
-            #print(record) # for development
-            allRecords.append(record) # Append record to list of lists with all records read this run
-
+            if record[4] != None and record[5]!=None:
+                ModifyMessage(service, 'me', messageID, messageLabels)
+                print(record)
+                allRecords.append(record)
         # paging the process in order to get a stable connnection
         # else:
         #     for indexLimit in range(0,49):
@@ -361,6 +361,6 @@ def unreadAllEmails():
         ModifyMessage(service, 'me', messageID, messageLabels)
 
 def main():
-    get_emails()
+    pass
 if __name__ == '__main__':
     main()
