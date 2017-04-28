@@ -66,7 +66,7 @@ def create_df(hostname='localhost', user='', password='', database=''):
     c = conn.cursor()
 
     df = pd.read_sql('SELECT * from emailRecords', con = conn)
-    print(df.dtypes)
+    #print(df.dtypes)
 
     c.close()
     conn.close()
