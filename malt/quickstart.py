@@ -1,17 +1,3 @@
-'''
-Gmail API Connection module
-
-The get_emails() function is specialized for connecting to the MALT gmail inbox repository. It
-returns a list of lists with all unread email records in the format:
-[UserID, IP Address, Date, City, State, Country, Latitude, Longitude]
-
-The Gmail API requires a user to be authenticated with the client_secret.json file.
-The get_credentials() function looks for the client_secret.json file in the location set in
-the CLIENT_SECRET_FILE variable. It creates ~/.credentials/gmail-python-quickstart.json, which
-perpetually authorizes the user. If this module returns a 403 Access Denied error, delete the
-gmail-python-quickstart.json file from the user's home folder and let this module create it again.
-'''
-
 
 from __future__ import print_function
 import httplib2
@@ -294,55 +280,29 @@ def get_emails():
 
     messageLabels = CreateMsgLabels() # Removes
 
-    # for mess in allMessages:
-    #     messageID = mess['id']
-    #
-    #     ModifyMessage(service, 'me', messageID, messageLabels)
-    #     #print (getAttributes(str(GetMimeMessage(service, 'me', messageID))))
-    #     record = getAttributes(str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
-    #     if len(record) == 4:
-    #
-    #
-    #         #record.append(geocoder.google(record[2]).latlng)# add city from IP - geocoder library
-    #         print(record)
-    #
-    #     #allRecords.append(record)
-
-    while len(allMessages) != 0:
-        mess = allMessages[0] # store and remove an email record from allMessages
+    while len(allMessages) != 0 and len(allRecords)< 500 :
+        mess = allMessages[0]
         allMessages.pop(0)
         messageID = mess['id']
-        ModifyMessage(service, 'me', messageID, messageLabels) # Change label from ['UNREAD'] to ['Label_1']
         record = getAttributes(
             str(GetMimeMessage(service, 'me', messageID)))  # [UserID, IP Address, Location, Time]
         if len(record) == 4:
             try:
-                # Datetime
                 tm = record[3]
                 record.pop() # remove verbose string Time field
                 # Add parsed YYY-MM-DD HH:MM:SS (24h time)
                 parsetime = datetime.datetime.strptime(tm[0:-22], '%A, %B %d, %Y at %I:%M:%S %p')
                 record.append(datetime.datetime.strftime(parsetime, '%Y-%m-%d %H:%M:%S'))
-
-                # Google Geocode query
-                geo = geocoder.google(record[2])
-                record.append(geo.city)
-                record.append(geo.state)
-                record.append(geo.country)
-                if len(record) == 7: # ensure 3 fields were added before removing old location
-                    record.pop(2)
-                record.append(geo.lat)
-                record.append(geo.lng)
-
                 # query Google geocoding API with string Location field
-                # record.append(geocoder.google(record[2]).lat)
-                # record.append(geocoder.google(record[2]).lng)
+                record.append(geocoder.google(record[2]).lat)
+                record.append(geocoder.google(record[2]).lng)
             except:
                 # ISSUE: leaves None in some fields when it passes to next iteration.
-                pass
-            #print(record) # for development
-            allRecords.append(record) # Append record [UserID, IP Address, Date, City, State, Country, Latitude, Longitude]
-
+                break
+            if record[4] != None and record[5]!=None:
+                ModifyMessage(service, 'me', messageID, messageLabels)
+                print(record)
+                allRecords.append(record)
         # paging the process in order to get a stable connnection
         # else:
         #     for indexLimit in range(0,49):
@@ -381,12 +341,11 @@ def unreadAllEmails():
 
     messageLabels = CreateUnreadMsgLabels()
 
-
     for mess in allMessages:
         messageID = mess['id']
         ModifyMessage(service, 'me', messageID, messageLabels)
 
 def main():
-    get_emails()
+    unreadAllEmails()
 if __name__ == '__main__':
     main()

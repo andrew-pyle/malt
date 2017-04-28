@@ -16,13 +16,18 @@ DataFrame column names expected:
 import pandas as pd
 import MySQLdb   #pip3 install mysqlclient
 import sys
+from warnings import filterwarnings
+
+filterwarnings('ignore', category=MySQLdb.Warning) #This will proceed the program without warning getting in the way when creating the table.
+
+
 
 # def get_emails():
-#     # #before we get the data variable from Hanzhao, we insert the following records into database
-#     #two data records
-#     email_list = [['jinzh','34.7464809','92.2895947', '2017-01-08 20:52:47','73.133.196.202','P-town','Oregon','USA'],['Dummy Data', '92.2895947', '34.7464809','2016-01-08 20:52:47', '2602:30a:c071:a260:6c0d:5d86:be0f:a774', 'San Jose', 'California', 'USA']]
-#     return email_list
-
+    # # #before we get the data variable from Hanzhao, we insert the following records into database
+    # #two data records
+    # email_list = [['Dummy Data', '92.2895947', '34.7464809','2017-03-08 20:52:47', '2602:30a:c071:a260:6c0d:5d86:be0f:a774', 'San Jose', 'California', 'USA'],['jinzh','34.7464809','92.2895947', '2017-03-08 20:52:47','73.133.196.202','P-town','Oregon','USA'],[
+    # 'Dummy Data', '', '15454.1','2017-03-08 20:52:47', '2602:30a:c071:a260:6c0d:5d86:be0f:a774', 'San Jose', 'California', 'USA']]
+    # return email_list
 
 #### MySQL Connection
 def store_emails(email_list, hostname='localhost', user='', password='', database=''):
@@ -37,12 +42,13 @@ def store_emails(email_list, hostname='localhost', user='', password='', databas
 
     #create a table if it doesn't exist named emailRecords
     c.execute("CREATE TABLE IF NOT EXISTS emailRecords(`Account Name` varchar(15), Latitude float(20), Longitude float(20), Datetime datetime, `IP Address` varchar(40), `City` varchar(20), `State` varchar(20), `Country` varchar(25))")
-
+    c.execute("Delete from emailRecords WHERE Datetime < NOW() - INTERVAL 90 DAY")
     #here is the insertion and commit row by row of data records
     for col in email_list:
-        c.execute("INSERT INTO emailRecords(`Account Name`, `IP Address`, Datetime, City, State, Country, Latitude, Longitude) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (col[0], col[1], col[2], col[3], col[4], col[5], col[6], col[7]))
-        conn.commit()
-
+        if '' not in col:
+              c.execute("INSERT INTO emailRecords(`Account Name`, Latitude, Longitude, Datetime, `IP Address`, City, State, Country) VALUES (%s, %s, %s, %s, %s,%s, %s, %s)", (col[0], col[1], col[2], col[3], col[4], col[5], col[6], col[7]))
+              conn.commit()
+    conn.close()
 
 ### Pandas DataFrame Generation
 def create_df(hostname='localhost', user='', password='', database=''):
