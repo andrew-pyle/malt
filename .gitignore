@@ -10,3 +10,6 @@
 
 # Symbolic link to cron job log
 updated_mail_log
+
+# MySQL credential module
+malt/mysql_credentials.py

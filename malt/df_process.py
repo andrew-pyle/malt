@@ -3,12 +3,11 @@ MALT Dashboard Data Manipulation module
 
 DataFrame column names expected:
  - df['Account Name']
- - df['City']
-  - df['State']
- - df['Country']
- - df['Date']
- - df['Time']
  - df['IP Address']
+ - df['Datetime']
+ - df['City']
+ - df['State']
+ - df['Country']
  - df['Latitude']
  - df['Longitude']
  '''
