@@ -4,11 +4,12 @@ import pandas as pd
 from df_process import store_emails
 from quickstart import get_emails
 
-# Set configuration here for MySQL server
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
+# Set configuration here for MySQL server (also in app.py!)
+credentials = set_credentials()
+HOSTNAME = credentials['HOSTNAME']
+USER = credentials['USER']
+PASSWORD = credentials['PASSWORD']
+DATABASE = credentials['DATABASE']
 
 # Get emails and store them to MySQL database as described above
 email_list = get_emails()
