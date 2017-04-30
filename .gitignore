@@ -7,3 +7,6 @@
 
 # Python Scripts Folder
 /malt/Python Scripts/
+
+# Symbolic link to cron job log
+updated_mail_log
