@@ -29,7 +29,7 @@ app = Flask(__name__)
 
 # Set configuration here for MySQL server (also in update_records.py!)
 ***REMOVED***
-***REMOVED***
+USER = 'REDACTED'
 ***REMOVED***
 ***REMOVED***
 
