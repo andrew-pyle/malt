@@ -7,3 +7,5 @@
 
 # Python Scripts Folder
 /malt/Python Scripts/
+
+malt/mysql_credentials.py

@@ -3,12 +3,11 @@ MALT Dashboard Data Manipulation module
 
 DataFrame column names expected:
  - df['Account Name']
- - df['City']
-  - df['State']
- - df['Country']
- - df['Date']
- - df['Time']
  - df['IP Address']
+ - df['Datetime']
+ - df['City']
+ - df['State']
+ - df['Country']
  - df['Latitude']
  - df['Longitude']
  '''
@@ -44,7 +43,7 @@ def store_emails(email_list, hostname='localhost', user='', password='', databas
     for col in email_list:
         if '' not in col:
             c.execute("INSERT INTO emailRecords(`Account Name`, `IP Address`, Datetime, City, State, Country, Latitude, Longitude) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (col[0], col[1], col[2], col[3], col[4], col[5], col[6], col[7]))
-              conn.commit()
+            conn.commit()
     conn.close()
 
 ### Pandas DataFrame Generation

@@ -15,17 +15,23 @@ def LocationDistribution(df):
     capability to order bars in a histogram, so a new dataframe with the proper order is created
     and a Bar Chart is used. '''
 
-    citySeries = df['City'].value_counts()
+    # Create City, State temporary dataframe
+    tempdf = pd.DataFrame({'City, State': df['City'] + ', ' + df['State']})
+    # Get counts of unique values
+    citySeries = tempdf['City, State'].value_counts()
+    # Create temporary dataframe for plotly to create a chart
     cityFrame = pd.DataFrame({'city' : citySeries.index, 'count' : citySeries.values})
+    # Plotly chart
     trace = [
         go.Bar(
             x = cityFrame['city'],
             y = cityFrame['count'],
+            text = "City: " + cityFrame['city'],
             marker = dict(
-            color='rgb(158,202,225)',
-            line=dict(
-                color='rgb(8,48,107)',
-                width=1.5,
+                color='rgb(158,202,225)',
+                line=dict(
+                    color='rgb(8,48,107)',
+                    width=1.5,
                 ),
             ),
         opacity=0.6,
@@ -66,6 +72,7 @@ def AccountDistribution(df):
             x = accountFrame["accountName"],
             y = accountFrame["login count"],
             #width = 0.9,
+            text = "Account: " + accountFrame['accountName'],
             marker = dict(
                 color='#fe9aa2',
                 line=dict(
@@ -184,6 +191,7 @@ def IPAddressDistributionToday(df):
             x = ipFrame["ipAddress"],
             y = ipFrame["login count"],
             #width = 0.9,
+            text = "IP Address: " + ipFrame['ipAddress'],
             marker = dict(
                 color='#8dd775',
                 line=dict(
@@ -209,13 +217,15 @@ def IPAddressDistributionToday(df):
             # showticklabels = True,
             # tickmode = 'auto',
             # nticks = 10,
+            rangemode='nonnegative',
+            autorange=True,
             tickfont = dict(
                 size=10,
-                ),
             ),
+        ),
         yaxis = dict(
             #title = "Frequency"
-            ),
+        ),
     )
     accounts = go.Figure(data=trace, layout=layout)
     return plotly.offline.plot(
@@ -228,7 +238,7 @@ def IPAddressDistributionToday(df):
 
 def DataTable(df):
     '''Creates a HTML table of records in the dataframe passed as argument df '''
-    return df[['Account Name','Latitude','Longitude', 'City', 'State','Country','Datetime','IP Address']].to_html()
+    return df[['Account Name','Datetime','IP Address','City','State','Country','Latitude','Longitude']].to_html()
 
     # PLOTLY TABLE VERSION
     # dfTable = df[['Account Name','Country','State','City','Date','Time','IP Address',]]

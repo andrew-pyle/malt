@@ -24,25 +24,30 @@ import pandas as pd
 import dashboard_units as dash
 from df_process import create_df
 from df_process import filter_df
+from mysql_credentials import set_credentials
 
 app = Flask(__name__)
 
 # Set configuration here for MySQL server (also in update_records.py!)
-***REMOVED***
-USER = 'REDACTED'
-***REMOVED***
-***REMOVED***
+credentials = set_credentials()
+HOSTNAME = credentials['HOSTNAME']
+USER = credentials['USER']
+PASSWORD = credentials['PASSWORD']
+DATABASE = credentials['DATABASE']
 
 
-## Import flat JSON file with data sample for development
-#data = "data.json"
-df = create_df(hostname=HOSTNAME, user=USER, password=PASSWORD, database=DATABASE)
-df.index += 1
+# # Import flat JSON file with data sample for development
+# data = "data.json"
+# df = pd.read_json(data)
+# df.index += 1
 
 
 ## URL Routing
 @app.route("/")
 def index():
+    # Connect to MySQL and create Pandas df on page load
+    df = create_df(hostname=HOSTNAME, user=USER, password=PASSWORD, database=DATABASE)
+    df.index += 1
     url_args = {
     'radius': '',
     'latitude': '34.7241',
@@ -64,15 +69,17 @@ def index():
 
 @app.route("/query/")
 def query():
+    # Connect to MySQL and create Pandas df on page load
+    df = create_df(hostname=HOSTNAME, user=USER, password=PASSWORD, database=DATABASE)
+    df.index += 1
     url_args = {
-    'radius': request.args['radius'],
-    'latitude': request.args['latitude'],
-    'longitude': request.args['longitude'],
-    'start_date': request.args['start_date'],
-    'end_date': request.args['end_date'],
-    'start_time': request.args['start_time'],
-    'end_time': request.args['end_time']
-    }
+        'radius': request.args['radius'],
+        'latitude': request.args['latitude'],
+        'longitude': request.args['longitude'],
+        'start_date': request.args['start_date'],
+        'end_date': request.args['end_date'],
+        'start_time': request.args['start_time'],
+        'end_time': request.args['end_time']}
     subsetdf = filter_df(df,
         radius = url_args['radius'],
         latitude = url_args['latitude'],
