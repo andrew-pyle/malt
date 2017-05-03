@@ -3,7 +3,7 @@
 import pandas as pd
 from df_process import store_emails
 from quickstart import get_emails
-
+from mysql_credentials import set_credentials
 # Set configuration here for MySQL server (also in app.py!)
 credentials = set_credentials()
 HOSTNAME = credentials['HOSTNAME']
