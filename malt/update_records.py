@@ -1,4 +1,4 @@
-# run every 2 hrs
+# run every hour
 
 import pandas as pd
 from df_process import store_emails
