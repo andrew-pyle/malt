@@ -8,4 +8,11 @@
 # Python Scripts Folder
 /malt/Python Scripts/
 
-malt/mysql_credentials.py
+# Symbolic link to cron job log
+updated_mail_log
+
+# MySQL credential module
+mysql_credentials.py
+
+# Gmail API
+client_secret.json
