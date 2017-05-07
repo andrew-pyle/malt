@@ -30,12 +30,17 @@ SOFTWARE.-->
   <link rel="stylesheet" type="text/css" href="../static/assets/lib/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="../static/assets/css/keen-dashboards.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+  <link rel="sytlesheet" href="https://unpkg.com/leaflet.markercluster@1.0.5/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.0.5/dist/MarkerCluster.Default.css" />
   <link rel="stylesheet" href="../static/assets/css/custom.css" />
   <link rel="icon" href="../static/assets/img/favicon.ico">
   <script type="text/javascript" src="../static/assets/lib/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript" src="../static/assets/js/plotly.min.js"></script>
-  <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script> -->
   <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+  <script type="text/javascript" src="https://unpkg.com/leaflet.markercluster@1.0.5/dist/leaflet.markercluster.js"></script>
+  <script type="text/javascript" src="/static/assets/js/custom.js"></script>
 </head>
 <body class="application">
 
@@ -55,7 +60,7 @@ SOFTWARE.-->
       </div>
       <div class="navbar-collapse collapse">
         <div class="nav navbar-nav navbar-left">
-          <form action="/query">
+          <form name="filter" action="/query" onsubmit="return validateLocationFilter();">
             <div class="filters">
               Radius (km)
               <input name="radius" type="number" id="radius" class="form-control" value={{ filter_vals['radius'] }}>
@@ -103,44 +108,47 @@ SOFTWARE.-->
           <div id="mapid" class="chart-stage">
             <script>
               // Initialize Map: ([latitude, longitude], zoom-level)
-              var map = L.map("mapid").setView([34.725237, -92.340925], 13);
+              var map = L.map("mapid").setView([34.725237, -92.340925], 12);
 
-              // Load Stamen Tile Layer
-              /**************
+              /* Load Stamen Tile Layer
                * Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
                * See http://maps.stamen.com
                * StamenTileLayer arguments:
                *  "toner"
                *  "toner-lite"
                *  "terrain"
-               *  "watercolor"
-               **************/
+               *  "watercolor" */
               var layer = new L.StamenTileLayer("toner-lite");
               map.addLayer(layer);
 
               // Add Markers from dataframe in memory in Flask
-              //   Jinja2 variable iterrows passes an iterable pandas dataframe object for the Jinja2
-              //   template language to iterate over
+              // Jinja2 variable iterrows passes an iterable pandas dataframe object for the Jinja2
+              // template language to iterate over
+
+              // Create Leaflet.markercluster group
+              var markerCluster = L.markerClusterGroup();
               {% for index, row in iterrows %} // Iterate over all rows in dataframe matching query. If query blank, every row is passed in "iterrows"
-                var marker = L.marker({{[row['Latitude'], row['Longitude']]}}).addTo(map)
+                var marker = L.marker({{[row['Latitude'], row['Longitude']]}}, {draggable:'True'})//.addTo(map)
                 // Format the Popup with HTML!!
-                .bindPopup( "{{row['Account Name']}}, {{row['Date']}}, {{row['City']}}, {{row['State']}}, {{row['IP Address']}}"); // Assign values from dataframe row to its popup
+                .bindPopup( "{{row['Account Name']}}, {{row['Datetime']}}, {{row['City']}}, {{row['State']}}, {{row['IP Address']}}"); // Assign values from dataframe row to its popup
+                markerCluster.addLayer(marker);
               {% endfor %}
+              map.addLayer(markerCluster);
 
               // Add Search radius circle if radius, latitude, and longitude are submitted on the form
+              // Works with Leaflet 1.0.3. Not compatible with Leaflet 0.7.7
               {% if filter_vals['radius'] != '' and filter_vals['latitude'] != '' and filter_vals['longitude'] != '' %}
-                var circle = L.circle([{{filter_vals['latitude']}},{{filter_vals['longitude']}}], {
+                var circle = L.circle([{{filter_vals['latitude']}},{{filter_vals['longitude']}}], ({{filter_vals['radius']}} * 1000), {
                   color: 'red',
                   fillColor: '#f03',
-                  fillOpacity: 0.25,
-                  radius: ({{filter_vals['radius']}} * 1000)
+                  fillOpacity: 0.25
                 }).addTo(map);
                 map.fitBounds(circle.getBounds()); // Set map view to the search radius
               {% endif %}
             </script>
           </div>
           <div class="chart-notes">
-            {{ filter_vals }}<!-- Click a marker to see the associated alert information. -->
+            Click a marker to see the associated alert information.
           </div>
         </div>
       </div>
