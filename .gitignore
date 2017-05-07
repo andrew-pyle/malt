@@ -12,4 +12,7 @@
 updated_mail_log
 
 # MySQL credential module
-malt/mysql_credentials.py
+mysql_credentials.py
+
+# Gmail API
+client_secret.json

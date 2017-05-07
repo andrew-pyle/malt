@@ -83,12 +83,12 @@ def filter_df(df, radius='', latitude='', longitude='',
              & ((df['Longitude']<= float(longitude) + (float(radius) / 111)) & (df['Longitude']>= float(longitude) - (float(radius) / 111))))]
     # Remove dataframe rows outside the date range
     if start_date != '':
-        df = df[df['Date'].dt.date >= pd.to_datetime(start_date).date()]
+        df = df[df['Datetime'].dt.date >= pd.to_datetime(start_date).date()]
     if end_date != '':
-        df = df[df['Date'].dt.date <= pd.to_datetime(end_date).date()]
+        df = df[df['Datetime'].dt.date <= pd.to_datetime(end_date).date()]
     # Remove dataframe rows outside the time range
     if start_time != '':
-        df = df[df['Time'].dt.time >= pd.to_datetime(start_time).date()]
+        df = df[df['Datetime'].dt.time >= pd.to_datetime(start_time).time()]
     if end_time != '':
-        df = df[df['Time'].dt.time <= pd.to_datetime(end_time).date()]
+        df = df[df['Datetime'].dt.time <= pd.to_datetime(end_time).time()]
     return df
